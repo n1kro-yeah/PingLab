@@ -7,6 +7,8 @@ import kotlinx.coroutines.SupervisorJob
 import live.nikro.pinglab.core.net.DnsLookupTool
 import live.nikro.pinglab.core.net.PingEngineFactory
 import live.nikro.pinglab.core.net.PortScanner
+import live.nikro.pinglab.core.net.TlsInspector
+import live.nikro.pinglab.core.net.WolSender
 import live.nikro.pinglab.core.net.TracerouteEngine
 import live.nikro.pinglab.core.util.NetworkInspector
 import live.nikro.pinglab.data.db.AppDatabase
@@ -61,6 +63,10 @@ object ServiceLocator {
     val dnsLookupTool: DnsLookupTool by lazy { DnsLookupTool() }
 
     val portScanner: PortScanner by lazy { PortScanner() }
+
+    val tlsInspector: TlsInspector by lazy { TlsInspector() }
+
+    val wolSender: WolSender by lazy { WolSender() }
 
     /** Traceroute reuses the ping engines DNS cache through the shared resolver. */
     val tracerouteEngine: TracerouteEngine by lazy { TracerouteEngine(engineFactory.sharedResolver()) }
