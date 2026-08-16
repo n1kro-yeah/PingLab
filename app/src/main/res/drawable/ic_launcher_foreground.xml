@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Radar sweep rings -->
+    <path
+        android:strokeColor="#7C9BFF"
+        android:strokeWidth="2"
+        android:strokeAlpha="0.45"
+        android:fillColor="#00000000"
+        android:pathData="M54,30 A24,24 0 1,1 53.9,30" />
+    <path
+        android:strokeColor="#7C9BFF"
+        android:strokeWidth="2"
+        android:strokeAlpha="0.30"
+        android:fillColor="#00000000"
+        android:pathData="M54,22 A32,32 0 1,1 53.9,22" />
+
+    <!-- Latency waveform -->
+    <path
+        android:strokeColor="#8AF0C6"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M28,60 L37,60 L42,48 L48,70 L54,42 L60,64 L65,56 L80,56" />
+
+    <!-- Pulse dot -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,74 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+</vector>
