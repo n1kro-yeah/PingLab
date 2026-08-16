@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 @Database(
     entities = [HostEntity::class, SampleEntity::class, SessionEntity::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -40,7 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
                 })
                 // Write-ahead logging keeps the monitoring writes from blocking chart reads.
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .fallbackToDestructiveMigration(dropAllTables = true)
+                .fallbackToDestructiveMigration()
                 .build()
     }
 }
