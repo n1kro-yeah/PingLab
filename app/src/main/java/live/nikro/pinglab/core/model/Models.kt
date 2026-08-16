@@ -324,14 +324,84 @@ data class DnsLookupResult(
     val isSuccess: Boolean get() = error == null && addresses.isNotEmpty()
 }
 
+/** What a port scan managed to establish about a single port. */
+enum class PortState {
+    /** A service proved itself, or the path is trustworthy: really open. */
+    OPEN,
+
+    /** The handshake completed, but nothing behind it behaved like a service. */
+    ACCEPTED,
+
+    /** The host actively refused the connection (RST). */
+    CLOSED,
+
+    /** Nothing came back at all - something is dropping the probe. */
+    FILTERED,
+
+    /** The network reported that the host cannot be reached. */
+    UNREACHABLE,
+}
+
+/** How a port state was proven, so the UI can be honest about confidence. */
+enum class PortEvidence {
+    BANNER, HTTP, TLS, RESPONSE, SILENT, DROPPED, RESET, NO_REPLY, NOT_CHECKED
+}
+
+/** Whether the scan as a whole can be believed. */
+enum class ScanTrust {
+    /** Random high ports were refused or dropped, so verdicts are reliable. */
+    TRUSTED,
+
+    /** One random port answered: could be a real service, could be a middlebox. */
+    SUSPICIOUS,
+
+    /** Random high ports answered, so something in the path accepts everything. */
+    ACCEPT_ALL,
+
+    UNKNOWN,
+}
+
 /** One port from a port-scan sweep. */
 data class PortProbe(
     val port: Int,
-    val isOpen: Boolean,
+    val state: PortState,
     val serviceName: String? = null,
     val rttMs: Double? = null,
     val banner: String? = null,
-)
+    val evidence: PortEvidence = PortEvidence.NOT_CHECKED,
+    val detail: String? = null,
+) {
+    val isOpen: Boolean get() = state == PortState.OPEN
+}
+
+/** Everything a TLS/HTTP endpoint check managed to learn. */
+data class TlsReport(
+    val host: String,
+    val port: Int,
+    val address: String? = null,
+    val protocol: String? = null,
+    val cipherSuite: String? = null,
+    val subject: String? = null,
+    val issuer: String? = null,
+    val sans: List<String> = emptyList(),
+    val validFrom: Long? = null,
+    val validTo: Long? = null,
+    val daysLeft: Long? = null,
+    val selfSigned: Boolean = false,
+    val hostnameMatches: Boolean? = null,
+    val chainLength: Int = 0,
+    val chainTrusted: Boolean? = null,
+    val handshakeMs: Double? = null,
+    val httpStatus: Int? = null,
+    val httpServer: String? = null,
+    val ttfbMs: Double? = null,
+    val redirect: String? = null,
+    val hsts: String? = null,
+    val error: String? = null,
+) {
+    val expired: Boolean get() = daysLeft != null && daysLeft < 0
+    val expiringSoon: Boolean get() = daysLeft != null && daysLeft in 0..14
+}
 
 /** Summary of a completed measurement session, persisted to history. */
 data class SessionSummary(
