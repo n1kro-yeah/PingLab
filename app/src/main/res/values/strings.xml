@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PingLab</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_live">Live ping</string>
+    <string name="nav_hosts">Hosts</string>
+    <string name="nav_tools">Tools</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Common -->
+    <string name="action_start">Start</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_export">Export</string>
+    <string name="action_add_host">Add host</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_copy">Copy</string>
+
+    <!-- Live ping -->
+    <string name="live_target_hint">Host or IP address</string>
+    <string name="live_target_helper">e.g. 8.8.8.8, google.com, 192.168.1.1:443</string>
+    <string name="live_empty_title">Nothing measured yet</string>
+    <string name="live_empty_body">Enter a host and press Start to begin probing.</string>
+
+    <!-- Stats labels -->
+    <string name="stat_last">Last</string>
+    <string name="stat_min">Min</string>
+    <string name="stat_avg">Avg</string>
+    <string name="stat_max">Max</string>
+    <string name="stat_median">Median</string>
+    <string name="stat_jitter">Jitter</string>
+    <string name="stat_loss">Loss</string>
+    <string name="stat_p95">p95</string>
+    <string name="stat_p99">p99</string>
+    <string name="stat_stddev">Std dev</string>
+    <string name="stat_sent">Sent</string>
+    <string name="stat_received">Received</string>
+    <string name="stat_mos">MOS</string>
+    <string name="stat_uptime">Uptime</string>
+
+    <!-- Notification -->
+    <string name="notif_channel_monitor_name">Monitoring</string>
+    <string name="notif_channel_monitor_desc">Ongoing notification shown while hosts are being monitored.</string>
+    <string name="notif_channel_alerts_name">Alerts</string>
+    <string name="notif_channel_alerts_desc">Notifies you when a monitored host goes down or recovers.</string>
+    <string name="notif_monitor_title">Monitoring %1$d host(s)</string>
+    <string name="notif_action_stop">Stop</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_host">Enter a valid hostname, IPv4 or IPv6 address</string>
+    <string name="error_no_network">No network connection</string>
+    <string name="error_unknown_host">Host could not be resolved</string>
+
+    <!-- Settings -->
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_probing">Probing defaults</string>
+    <string name="settings_alerts">Alerts</string>
+    <string name="settings_storage">Storage &amp; data</string>
+    <string name="settings_about">About</string>
+</resources>

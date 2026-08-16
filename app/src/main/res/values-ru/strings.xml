@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PingLab</string>
+
+    <string name="nav_dashboard">Обзор</string>
+    <string name="nav_live">Пинг</string>
+    <string name="nav_hosts">Хосты</string>
+    <string name="nav_tools">Инструменты</string>
+    <string name="nav_settings">Настройки</string>
+
+    <string name="action_start">Старт</string>
+    <string name="action_stop">Стоп</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_retry">Повторить</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_export">Экспорт</string>
+    <string name="action_add_host">Добавить хост</string>
+    <string name="action_edit">Изменить</string>
+    <string name="action_copy">Копировать</string>
+
+    <string name="live_target_hint">Хост или IP-адрес</string>
+    <string name="live_target_helper">напр. 8.8.8.8, google.com, 192.168.1.1:443</string>
+    <string name="live_empty_title">Пока нет измерений</string>
+    <string name="live_empty_body">Введите хост и нажмите «Старт», чтобы начать замеры.</string>
+
+    <string name="stat_last">Последний</string>
+    <string name="stat_min">Мин</string>
+    <string name="stat_avg">Сред</string>
+    <string name="stat_max">Макс</string>
+    <string name="stat_median">Медиана</string>
+    <string name="stat_jitter">Джиттер</string>
+    <string name="stat_loss">Потери</string>
+    <string name="stat_p95">p95</string>
+    <string name="stat_p99">p99</string>
+    <string name="stat_stddev">Ст. откл.</string>
+    <string name="stat_sent">Отпр.</string>
+    <string name="stat_received">Получ.</string>
+    <string name="stat_mos">MOS</string>
+    <string name="stat_uptime">Аптайм</string>
+
+    <string name="notif_channel_monitor_name">Мониторинг</string>
+    <string name="notif_channel_monitor_desc">Постоянное уведомление во время мониторинга хостов.</string>
+    <string name="notif_channel_alerts_name">Оповещения</string>
+    <string name="notif_channel_alerts_desc">Уведомляет, когда хост стал недоступен или восстановился.</string>
+    <string name="notif_monitor_title">Мониторинг хостов: %1$d</string>
+    <string name="notif_action_stop">Стоп</string>
+
+    <string name="error_invalid_host">Введите корректное имя хоста, IPv4 или IPv6</string>
+    <string name="error_no_network">Нет подключения к сети</string>
+    <string name="error_unknown_host">Не удалось разрешить имя хоста</string>
+
+    <string name="settings_appearance">Оформление</string>
+    <string name="settings_probing">Параметры замеров</string>
+    <string name="settings_alerts">Оповещения</string>
+    <string name="settings_storage">Хранилище и данные</string>
+    <string name="settings_about">О приложении</string>
+</resources>
