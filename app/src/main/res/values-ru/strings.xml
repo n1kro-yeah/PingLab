@@ -56,4 +56,41 @@
     <string name="settings_alerts">Оповещения</string>
     <string name="settings_storage">Хранилище и данные</string>
     <string name="settings_about">О приложении</string>
+
+    <!-- Вкладка Тема -->
+    <string name="nav_theme">Тема</string>
+    <string name="theme_palette_title">Цветовая палитра</string>
+    <string name="theme_palette_subtitle">Тональные палитры Material 3</string>
+    <string name="theme_palette_purple">Фиолетовая</string>
+    <string name="theme_palette_purple_caption">Базовая тема Material 3</string>
+    <string name="theme_palette_blue">Синяя</string>
+    <string name="theme_palette_blue_caption">Фирменная PingLab</string>
+    <string name="theme_palette_green">Зелёная</string>
+    <string name="theme_palette_green_caption">Спокойная и контрастная</string>
+    <string name="theme_palette_amber">Янтарная</string>
+    <string name="theme_palette_amber_caption">Тёплая, удобная ночью</string>
+    <string name="theme_seed">Базовый цвет</string>
+    <string name="theme_dynamic_overrides">Включены динамические цвета — палитра ниже не применяется</string>
+    <string name="theme_mode_title">Оформление</string>
+    <string name="theme_mode_system">Системная</string>
+    <string name="theme_mode_light">Светлая</string>
+    <string name="theme_mode_dark">Тёмная</string>
+    <string name="theme_dynamic_title">Динамические цвета</string>
+    <string name="theme_dynamic_desc">Строить схему по обоям (Android 12+)</string>
+    <string name="theme_dynamic_unavailable">Требуется Android 12 или новее</string>
+    <string name="theme_amoled_title">Чистый чёрный (AMOLED)</string>
+    <string name="theme_amoled_desc">Абсолютно чёрные поверхности в тёмной теме</string>
+    <string name="theme_api_level">Уровень API Android</string>
+    <string name="theme_tonal_title">Тональная палитра</string>
+    <string name="theme_tonal_subtitle">Один оттенок, тона от 10 до 99</string>
+    <string name="theme_roles_title">Цветовые роли</string>
+    <string name="theme_roles_subtitle">Как схема ложится на реальные поверхности</string>
+    <string name="theme_components_title">Компоненты</string>
+    <string name="theme_loading_title">Анимации загрузки</string>
+    <string name="theme_loading_subtitle">Волнистые индикаторы в стиле Material 3 Expressive</string>
+    <string name="theme_loading_determinate">С прогрессом</string>
+    <string name="theme_loading_indeterminate">Без прогресса</string>
+    <string name="theme_icons_title">Значки</string>
+    <string name="theme_icons_subtitle">Стили Material Symbols</string>
+    <string name="theme_icons_hint">В навигации неактивные значки контурные, а выбранный — залитый</string>
 </resources>
