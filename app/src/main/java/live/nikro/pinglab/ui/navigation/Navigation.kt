@@ -8,11 +8,16 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Build
-import androidx.compose.material.icons.rounded.Dashboard
-import androidx.compose.material.icons.rounded.Dns
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Dns
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Timeline
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.Dns
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -39,6 +44,7 @@ import live.nikro.pinglab.ui.screens.detail.HostDetailScreen
 import live.nikro.pinglab.ui.screens.hosts.HostsScreen
 import live.nikro.pinglab.ui.screens.live.LiveScreen
 import live.nikro.pinglab.ui.screens.settings.SettingsScreen
+import live.nikro.pinglab.ui.screens.theme.ThemeScreen
 import live.nikro.pinglab.ui.screens.tools.ToolsScreen
 
 /** Route constants. Kept as plain strings so deep links stay trivial to build. */
@@ -47,23 +53,59 @@ object Routes {
     const val LIVE = "live"
     const val HOSTS = "hosts"
     const val TOOLS = "tools"
+    const val THEME = "theme"
     const val SETTINGS = "settings"
     const val HOST_DETAIL = "host/{hostId}"
 
     fun hostDetail(hostId: Long): String = "host/" + hostId
 }
 
-/** The five entries of the Material 3 navigation bar. */
+/**
+ * The five entries of the Material 3 navigation bar.
+ *
+ * Two icons per destination on purpose: M3 asks for the outlined symbol while a destination
+ * is inactive and the filled one once it is selected, which is what makes the active pill
+ * read as "you are here" without relying on colour alone.
+ *
+ * Settings is intentionally not a bar destination \u2014 the bar is capped at five items, and
+ * settings is reachable from the action in the Theme top bar.
+ */
 enum class TopLevelDestination(
     val route: String,
     val labelRes: Int,
-    val icon: ImageVector,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
 ) {
-    DASHBOARD(Routes.DASHBOARD, R.string.nav_dashboard, Icons.Rounded.Dashboard),
-    LIVE(Routes.LIVE, R.string.nav_live, Icons.Rounded.Timeline),
-    HOSTS(Routes.HOSTS, R.string.nav_hosts, Icons.Rounded.Dns),
-    TOOLS(Routes.TOOLS, R.string.nav_tools, Icons.Rounded.Build),
-    SETTINGS(Routes.SETTINGS, R.string.nav_settings, Icons.Rounded.Settings),
+    DASHBOARD(
+        Routes.DASHBOARD,
+        R.string.nav_dashboard,
+        Icons.Filled.Dashboard,
+        Icons.Outlined.Dashboard,
+    ),
+    LIVE(
+        Routes.LIVE,
+        R.string.nav_live,
+        Icons.Filled.Timeline,
+        Icons.Outlined.Timeline,
+    ),
+    HOSTS(
+        Routes.HOSTS,
+        R.string.nav_hosts,
+        Icons.Filled.Dns,
+        Icons.Outlined.Dns,
+    ),
+    TOOLS(
+        Routes.TOOLS,
+        R.string.nav_tools,
+        Icons.Filled.Build,
+        Icons.Outlined.Build,
+    ),
+    THEME(
+        Routes.THEME,
+        R.string.nav_theme,
+        Icons.Filled.Palette,
+        Icons.Outlined.Palette,
+    ),
 }
 
 /**
@@ -82,7 +124,10 @@ fun PingLabApp(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
-    val barVisible = TopLevelDestination.entries.any { it.route == currentRoute }
+    // Settings keeps the bar on screen even though it is not one of its items, so the user
+    // is never stranded on a screen with no way back to a top-level destination.
+    val barVisible = TopLevelDestination.entries.any { it.route == currentRoute } ||
+        currentRoute == Routes.SETTINGS
 
     LaunchedEffect(initialHostId) {
         if (initialHostId != null && initialHostId > 0L) {
@@ -121,7 +166,12 @@ fun PingLabApp(
                                     restoreState = true
                                 }
                             },
-                            icon = { Icon(item.icon, contentDescription = null) },
+                            icon = {
+                                Icon(
+                                    imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                                    contentDescription = null,
+                                )
+                            },
                             label = { Text(stringResource(item.labelRes)) },
                             alwaysShowLabel = true,
                         )
@@ -156,6 +206,14 @@ fun PingLabApp(
 
             composable(Routes.TOOLS) {
                 ToolsScreen(initialTarget = initialTarget)
+            }
+
+            composable(Routes.THEME) {
+                ThemeScreen(
+                    onOpenSettings = {
+                        navController.navigate(Routes.SETTINGS) { launchSingleTop = true }
+                    },
+                )
             }
 
             composable(Routes.SETTINGS) {
