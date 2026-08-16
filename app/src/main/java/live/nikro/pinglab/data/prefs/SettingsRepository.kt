@@ -22,6 +22,21 @@ enum class ThemeMode(val label: String) {
     DARK("Dark"),
 }
 
+/**
+ * Static colour palettes offered on the Theme tab.
+ *
+ * [PURPLE] is the Material 3 baseline scheme (seed #6750A4) and therefore the default: it is
+ * what Material itself falls back to when no dynamic colour is available. The actual tonal
+ * palettes live in `ui/theme/Tonal.kt`; this enum is only the persisted identifier, which is
+ * why the data layer carries no Compose types.
+ */
+enum class ThemePalette(val label: String) {
+    PURPLE("Purple"),
+    BLUE("Blue"),
+    GREEN("Green"),
+    AMBER("Amber"),
+}
+
 enum class ChartStyle(val label: String) {
     LINE("Line"),
     AREA("Area"),
@@ -31,7 +46,9 @@ enum class ChartStyle(val label: String) {
 /** Everything the user can tune. Immutable snapshot, emitted as a single stream. */
 data class AppSettings(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
-    val useDynamicColor: Boolean = true,
+    val themePalette: ThemePalette = ThemePalette.PURPLE,
+    val useDynamicColor: Boolean = false,
+    val amoledBlack: Boolean = false,
     val chartStyle: ChartStyle = ChartStyle.AREA,
     val showGrid: Boolean = true,
     val animateCharts: Boolean = true,
@@ -73,6 +90,20 @@ class SettingsRepository(private val context: Context) {
     suspend fun setThemeMode(mode: ThemeMode) = edit { it[Keys.THEME_MODE] = mode.name }
 
     suspend fun setDynamicColor(enabled: Boolean) = edit { it[Keys.DYNAMIC_COLOR] = enabled }
+
+    suspend fun setThemePalette(palette: ThemePalette) = edit { it[Keys.THEME_PALETTE] = palette.name }
+
+    /**
+     * Picking a palette by hand implies the user no longer wants the wallpaper to decide,
+     * so dynamic colour is switched off in the same transaction. Without this the palette
+     * cards would silently do nothing on Android 12+.
+     */
+    suspend fun selectPalette(palette: ThemePalette) = edit {
+        it[Keys.THEME_PALETTE] = palette.name
+        it[Keys.DYNAMIC_COLOR] = false
+    }
+
+    suspend fun setAmoledBlack(enabled: Boolean) = edit { it[Keys.AMOLED_BLACK] = enabled }
 
     suspend fun setChartStyle(style: ChartStyle) = edit { it[Keys.CHART_STYLE] = style.name }
 
@@ -127,7 +158,11 @@ class SettingsRepository(private val context: Context) {
             themeMode = this[Keys.THEME_MODE]?.let { name ->
                 ThemeMode.entries.firstOrNull { it.name == name }
             } ?: defaults.themeMode,
+            themePalette = this[Keys.THEME_PALETTE]?.let { name ->
+                ThemePalette.entries.firstOrNull { it.name == name }
+            } ?: defaults.themePalette,
             useDynamicColor = this[Keys.DYNAMIC_COLOR] ?: defaults.useDynamicColor,
+            amoledBlack = this[Keys.AMOLED_BLACK] ?: defaults.amoledBlack,
             chartStyle = this[Keys.CHART_STYLE]?.let { name ->
                 ChartStyle.entries.firstOrNull { it.name == name }
             } ?: defaults.chartStyle,
@@ -151,7 +186,9 @@ class SettingsRepository(private val context: Context) {
 
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
+        val THEME_PALETTE = stringPreferencesKey("theme_palette")
         val DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
+        val AMOLED_BLACK = booleanPreferencesKey("amoled_black")
         val CHART_STYLE = stringPreferencesKey("chart_style")
         val SHOW_GRID = booleanPreferencesKey("show_grid")
         val ANIMATE_CHARTS = booleanPreferencesKey("animate_charts")

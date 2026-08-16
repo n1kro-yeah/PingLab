@@ -57,7 +57,9 @@ class MainActivity : ComponentActivity() {
 
             PingLabTheme(
                 themeMode = settings.themeMode,
+                palette = settings.themePalette,
                 dynamicColor = settings.useDynamicColor,
+                amoledBlack = settings.amoledBlack,
             ) {
                 PingLabApp(
                     initialTarget = initialTarget,
