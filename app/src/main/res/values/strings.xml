@@ -63,4 +63,41 @@
     <string name="settings_alerts">Alerts</string>
     <string name="settings_storage">Storage &amp; data</string>
     <string name="settings_about">About</string>
+
+    <!-- Theme tab -->
+    <string name="nav_theme">Theme</string>
+    <string name="theme_palette_title">Color palette</string>
+    <string name="theme_palette_subtitle">Material 3 tonal palettes</string>
+    <string name="theme_palette_purple">Purple</string>
+    <string name="theme_palette_purple_caption">Material 3 baseline</string>
+    <string name="theme_palette_blue">Blue</string>
+    <string name="theme_palette_blue_caption">PingLab brand</string>
+    <string name="theme_palette_green">Green</string>
+    <string name="theme_palette_green_caption">Calm and high contrast</string>
+    <string name="theme_palette_amber">Amber</string>
+    <string name="theme_palette_amber_caption">Warm, easy at night</string>
+    <string name="theme_seed">Seed</string>
+    <string name="theme_dynamic_overrides">Dynamic color is on, so the palette below is not applied</string>
+    <string name="theme_mode_title">Appearance</string>
+    <string name="theme_mode_system">System</string>
+    <string name="theme_mode_light">Light</string>
+    <string name="theme_mode_dark">Dark</string>
+    <string name="theme_dynamic_title">Dynamic color</string>
+    <string name="theme_dynamic_desc">Build the scheme from the wallpaper (Android 12+)</string>
+    <string name="theme_dynamic_unavailable">Requires Android 12 or newer</string>
+    <string name="theme_amoled_title">Pure black (AMOLED)</string>
+    <string name="theme_amoled_desc">True black surfaces in the dark theme</string>
+    <string name="theme_api_level">Android API level</string>
+    <string name="theme_tonal_title">Tonal palette</string>
+    <string name="theme_tonal_subtitle">One hue, sampled from tone 10 to tone 99</string>
+    <string name="theme_roles_title">Color roles</string>
+    <string name="theme_roles_subtitle">How the scheme lands on real surfaces</string>
+    <string name="theme_components_title">Components</string>
+    <string name="theme_loading_title">Loading animations</string>
+    <string name="theme_loading_subtitle">Wavy indicators in the Material 3 Expressive style</string>
+    <string name="theme_loading_determinate">With progress</string>
+    <string name="theme_loading_indeterminate">Without progress</string>
+    <string name="theme_icons_title">Icons</string>
+    <string name="theme_icons_subtitle">Material Symbols styles</string>
+    <string name="theme_icons_hint">Navigation shows outlined icons when inactive and filled ones when selected</string>
 </resources>

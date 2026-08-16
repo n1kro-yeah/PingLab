@@ -414,24 +414,13 @@ fun ProgressStrip(
     progress: Float?,
     modifier: Modifier = Modifier,
 ) {
-    val color = MaterialTheme.colorScheme.primary
-    val track = MaterialTheme.colorScheme.surfaceVariant
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(6.dp)
-            .clip(RoundedCornerShape(3.dp))
-            .background(track)
-    ) {
-        val fraction = progress?.coerceIn(0f, 1f) ?: 0f
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction)
-                .height(6.dp)
-                .clip(RoundedCornerShape(3.dp))
-                .background(color)
-        )
-    }
+    // Kept as a named component so call sites do not care that the flat bar was replaced by
+    // the Material 3 Expressive wavy indicator. Passing a null progress now renders the
+    // indeterminate sweep instead of an empty track.
+    WavyLinearProgressIndicator(
+        progress = progress,
+        modifier = modifier.fillMaxWidth(),
+    )
 }
 
 /** Compact monospace pill for addresses, ports and transports. */
