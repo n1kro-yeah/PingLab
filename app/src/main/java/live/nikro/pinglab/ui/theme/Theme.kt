@@ -5,80 +5,18 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import live.nikro.pinglab.data.prefs.ThemeMode
-
-private val LightColors = lightColorScheme(
-    primary = BrandPrimaryLight,
-    onPrimary = BrandOnPrimaryLight,
-    primaryContainer = BrandPrimaryContainerLight,
-    onPrimaryContainer = BrandOnPrimaryContainerLight,
-    secondary = BrandSecondaryLight,
-    onSecondary = BrandOnSecondaryLight,
-    secondaryContainer = BrandSecondaryContainerLight,
-    onSecondaryContainer = BrandOnSecondaryContainerLight,
-    tertiary = BrandTertiaryLight,
-    onTertiary = BrandOnTertiaryLight,
-    tertiaryContainer = BrandTertiaryContainerLight,
-    onTertiaryContainer = BrandOnTertiaryContainerLight,
-    error = BrandErrorLight,
-    onError = BrandOnErrorLight,
-    errorContainer = BrandErrorContainerLight,
-    onErrorContainer = BrandOnErrorContainerLight,
-    background = BrandBackgroundLight,
-    onBackground = BrandOnBackgroundLight,
-    surface = BrandSurfaceLight,
-    onSurface = BrandOnSurfaceLight,
-    surfaceVariant = BrandSurfaceVariantLight,
-    onSurfaceVariant = BrandOnSurfaceVariantLight,
-    outline = BrandOutlineLight,
-    outlineVariant = BrandOutlineVariantLight,
-    surfaceContainer = BrandSurfaceContainerLight,
-    surfaceContainerHigh = BrandSurfaceContainerHighLight,
-    inverseSurface = BrandInverseSurfaceLight,
-    inverseOnSurface = BrandInverseOnSurfaceLight,
-)
-
-private val DarkColors = darkColorScheme(
-    primary = BrandPrimaryDark,
-    onPrimary = BrandOnPrimaryDark,
-    primaryContainer = BrandPrimaryContainerDark,
-    onPrimaryContainer = BrandOnPrimaryContainerDark,
-    secondary = BrandSecondaryDark,
-    onSecondary = BrandOnSecondaryDark,
-    secondaryContainer = BrandSecondaryContainerDark,
-    onSecondaryContainer = BrandOnSecondaryContainerDark,
-    tertiary = BrandTertiaryDark,
-    onTertiary = BrandOnTertiaryDark,
-    tertiaryContainer = BrandTertiaryContainerDark,
-    onTertiaryContainer = BrandOnTertiaryContainerDark,
-    error = BrandErrorDark,
-    onError = BrandOnErrorDark,
-    errorContainer = BrandErrorContainerDark,
-    onErrorContainer = BrandOnErrorContainerDark,
-    background = BrandBackgroundDark,
-    onBackground = BrandOnBackgroundDark,
-    surface = BrandSurfaceDark,
-    onSurface = BrandOnSurfaceDark,
-    surfaceVariant = BrandSurfaceVariantDark,
-    onSurfaceVariant = BrandOnSurfaceVariantDark,
-    outline = BrandOutlineDark,
-    outlineVariant = BrandOutlineVariantDark,
-    surfaceContainer = BrandSurfaceContainerDark,
-    surfaceContainerHigh = BrandSurfaceContainerHighDark,
-    inverseSurface = BrandInverseSurfaceDark,
-    inverseOnSurface = BrandInverseOnSurfaceDark,
-)
+import live.nikro.pinglab.data.prefs.ThemePalette
 
 /** Semantic colours, provided alongside the Material scheme. */
 val LocalStatusPalette = staticCompositionLocalOf { LightStatusPalette }
@@ -87,10 +25,28 @@ val LocalStatusPalette = staticCompositionLocalOf { LightStatusPalette }
 @Composable
 fun statusPalette(): StatusPalette = LocalStatusPalette.current
 
+/** True when the running device can hand us a wallpaper-derived scheme (Android 12+). */
+val dynamicColorSupported: Boolean
+    get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+/**
+ * Root theme.
+ *
+ * Colour resolution order:
+ *  1. dynamic colour, when the user asked for it and the device is on Android 12+,
+ *  2. otherwise the selected [ThemePalette], built from tonal palettes in `Tonal.kt`.
+ *
+ * @param themeMode light / dark / follow the system
+ * @param palette which static palette to build the scheme from
+ * @param dynamicColor prefer the wallpaper-derived scheme over [palette]
+ * @param amoledBlack collapse the darkest dark-theme surfaces to true black
+ */
 @Composable
 fun PingLabTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
-    dynamicColor: Boolean = true,
+    palette: ThemePalette = ThemePalette.PURPLE,
+    dynamicColor: Boolean = false,
+    amoledBlack: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val darkTheme = when (themeMode) {
@@ -100,16 +56,28 @@ fun PingLabTheme(
     }
 
     val context = LocalContext.current
-    val supportsDynamic = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val useDynamic = dynamicColor && dynamicColorSupported
 
-    val colorScheme: ColorScheme = when {
-        dynamicColor && supportsDynamic && darkTheme -> dynamicDarkColorScheme(context)
-        dynamicColor && supportsDynamic -> dynamicLightColorScheme(context)
-        darkTheme -> DarkColors
-        else -> LightColors
+    val spec = remember(palette) { paletteSpecFor(palette) }
+    val staticScheme = remember(spec, darkTheme, amoledBlack) {
+        if (darkTheme) spec.darkScheme(amoledBlack) else spec.lightScheme()
     }
 
-    val palette = if (darkTheme) DarkStatusPalette else LightStatusPalette
+    val colorScheme: ColorScheme = when {
+        useDynamic && darkTheme -> {
+            val dynamic = dynamicDarkColorScheme(context)
+            if (amoledBlack) dynamic.toAmoled() else dynamic
+        }
+
+        useDynamic -> dynamicLightColorScheme(context)
+        else -> staticScheme
+    }
+
+    val palettes = if (useDynamic) {
+        statusPaletteForScheme(colorScheme, darkTheme)
+    } else {
+        statusPaletteFor(spec, darkTheme)
+    }
 
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -124,7 +92,7 @@ fun PingLabTheme(
         }
     }
 
-    CompositionLocalProvider(LocalStatusPalette provides palette) {
+    CompositionLocalProvider(LocalStatusPalette provides palettes) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = PingLabTypography,
