@@ -224,7 +224,8 @@ class IcmpDatagramPinger {
                 Os.recvfrom(fd, byteBuffer, 0, source)
             } catch (e: ErrnoException) {
                 if (e.errno == OsConstants.EINTR) continue
-                if (e.errno == OsConstants.EAGAIN || e.errno == OsConstants.EWOULDBLOCK) {
+                // EWOULDBLOCK is an alias of EAGAIN on Linux and is not exposed by OsConstants.
+                if (e.errno == OsConstants.EAGAIN) {
                     return EchoReply(ProbeStatus.TIMEOUT, null, null, null, 0)
                 }
                 return EchoReply(mapErrno(e), null, null, null, 0, describeErrno(e))
@@ -359,7 +360,8 @@ class IcmpDatagramPinger {
         private const val RECEIVE_BUFFER = 2_048
 
         private const val ICMP4_ECHO_REQUEST: Byte = 8
-        private const val ICMP6_ECHO_REQUEST: Byte = 128
+        // Type 128 overflows a signed Byte; -128 is the very same 0x80 octet on the wire.
+        private const val ICMP6_ECHO_REQUEST: Byte = -128
         private const val ICMP4_ECHO_REPLY_INT = 0
         private const val ICMP6_ECHO_REPLY_INT = 129
     }
