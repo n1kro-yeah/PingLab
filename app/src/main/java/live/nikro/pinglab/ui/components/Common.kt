@@ -5,6 +5,8 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -116,7 +118,14 @@ fun SectionCard(
     }
 }
 
-/** Pulsing dot for CHECKING, solid dot otherwise. */
+/**
+ * Pulsing dot for CHECKING, solid dot otherwise.
+ *
+ * Both the pulse and the colour are read inside lambda modifiers (`graphicsLayer` and
+ * `drawBehind`). Reading them directly in composition, as an unwrapped `by` value, would
+ * recompose every dot on screen on every frame of the animation - with a dashboard full of
+ * hosts that alone is enough to make a 120 Hz screen feel like it is stuck at 24 fps.
+ */
 @Composable
 fun StatusDot(
     state: HostState,
@@ -125,11 +134,13 @@ fun StatusDot(
 ) {
     val palette = statusPalette()
     val (color, _) = palette.colorsFor(state)
-    val animatedColor by animateColorAsState(targetValue = color, label = "statusColor")
+    val colorState = animateColorAsState(targetValue = color, label = "statusColor")
 
-    val alpha = if (state == HostState.CHECKING) {
+    // The infinite transition only exists while something is actually pulsing, so idle dots
+    // do not keep the frame clock awake.
+    val pulse = if (state == HostState.CHECKING) {
         val transition = rememberInfiniteTransition(label = "pulse")
-        val value by transition.animateFloat(
+        transition.animateFloat(
             initialValue = 0.35f,
             targetValue = 1f,
             animationSpec = infiniteRepeatable(
@@ -138,17 +149,15 @@ fun StatusDot(
             ),
             label = "pulseAlpha",
         )
-        value
     } else {
-        1f
+        null
     }
 
     Box(
         modifier = modifier
             .size(size)
-            .alpha(alpha)
-            .clip(CircleShape)
-            .background(animatedColor)
+            .graphicsLayer { alpha = pulse?.value ?: 1f }
+            .drawBehind { drawCircle(color = colorState.value) },
     )
 }
 

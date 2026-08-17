@@ -4,7 +4,6 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.StartOffset
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -32,6 +31,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,9 @@ import kotlin.math.sin
  * drawn here from the published spec: 4 dp active stroke, ~40 dp wavelength, amplitude that
  * relaxes to zero as the value approaches 100 %, a 4 dp gap before the track, and a stop
  * indicator pinned to the end of the track.
+ *
+ * Every animated value below is read inside a Canvas draw lambda or a graphicsLayer block, so
+ * these indicators repeat the draw phase only and never trigger a recomposition per frame.
  *
  * Reference: m3.material.io/components/progress-indicators/specs
  */
@@ -378,7 +382,11 @@ fun ShimmerBox(
     cornerRadius: Dp = 12.dp,
 ) {
     val transition = rememberInfiniteTransition(label = "shimmer")
-    val shift by transition.animateFloat(
+
+    // Deliberately left as State instead of an unwrapped `by` value: the sweep moves on every
+    // frame, and it is read inside the draw lambda below, so a shimmering placeholder costs one
+    // draw pass per frame instead of a full composition pass per frame.
+    val shift = transition.animateFloat(
         initialValue = -1f,
         targetValue = 2f,
         animationSpec = infiniteRepeatable(
@@ -394,20 +402,22 @@ fun ShimmerBox(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(cornerRadius))
-            .background(base),
-    ) {
-        Canvas(modifier = Modifier.matchParentSize()) {
-            val width = size.width
-            val start = width * shift
-            drawRect(
-                brush = Brush.linearGradient(
+            .drawWithCache {
+                // The gradient is rebuilt only when the size or the colours change; during the
+                // animation it is merely translated, so nothing is allocated per frame.
+                val brush = Brush.linearGradient(
                     colors = listOf(base, highlight, base),
-                    start = Offset(start, 0f),
-                    end = Offset(start + width * 0.6f, size.height),
-                ),
-            )
-        }
-    }
+                    start = Offset.Zero,
+                    end = Offset(size.width * 0.6f, size.height),
+                )
+                onDrawBehind {
+                    drawRect(color = base)
+                    translate(left = size.width * shift.value) {
+                        drawRect(brush = brush)
+                    }
+                }
+            },
+    )
 }
 
 // ------------------------------------------------------------------ drawing helpers
