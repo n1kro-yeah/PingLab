@@ -90,23 +90,49 @@ fun LatencyChart(
         niceCeiling(max(values.maxOrNull() ?: 0.0, thresholdMs ?: 0.0))
     }
 
+    val ceilingF = ceiling.toFloat().coerceAtLeast(1f)
+
     // Animating the axis instead of snapping keeps a spike from making the whole chart jump.
-    val animatedMax by animateFloatAsState(
-        targetValue = ceiling.toFloat().coerceAtLeast(1f),
+    //
+    // These two values change on every single animation frame. They are deliberately kept as
+    // State and read inside the draw lambda below instead of being unwrapped with `by` here:
+    // a state read during composition invalidates composition, layout and draw for the whole
+    // chart on every frame, while a read inside the draw lambda repeats the draw phase only.
+    // On a 120 Hz screen that is the difference between smooth and visibly stuttering.
+    val animatedMaxState = animateFloatAsState(
+        targetValue = ceilingF,
         animationSpec = tween(durationMillis = if (animate) 420 else 0),
         label = "axisMax",
     )
-    val reveal by animateFloatAsState(
+    val revealState = animateFloatAsState(
         targetValue = if (values.isEmpty()) 0f else 1f,
         animationSpec = tween(durationMillis = if (animate) 520 else 0),
         label = "reveal",
     )
+
+    // Text measurement and PathEffect allocation are expensive, and neither depends on the
+    // animated values, so both happen once per data change instead of once per frame.
+    val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(6f, 8f), 0f) }
+    val axisLabels = remember(ceilingF, labelStyle) {
+        List(GRID_DIVISIONS + 1) { index ->
+            measurer.measure(
+                text = Formatters.axisLatency(ceilingF * (index / GRID_DIVISIONS.toFloat())),
+                style = labelStyle,
+            )
+        }
+    }
+    val emptyLayout = remember(emptyLabel, emptyStyle) { measurer.measure(emptyLabel, emptyStyle) }
 
     Canvas(
         modifier = modifier
             .fillMaxWidth()
             .height(height)
     ) {
+        // Draw-phase reads: everything below sees a plain Float, but Compose only invalidates
+        // the draw phase when these change.
+        val animatedMax = animatedMaxState.value
+        val reveal = revealState.value
+
         val gutter = if (showGrid) 42.dp.toPx() else 6.dp.toPx()
         val plotLeft = gutter
         val plotTop = 10.dp.toPx()
@@ -116,7 +142,7 @@ fun LatencyChart(
         val plotHeight = (plotBottom - plotTop).coerceAtLeast(1f)
 
         if (window.isEmpty() || values.isEmpty()) {
-            val layout = measurer.measure(emptyLabel, emptyStyle)
+            val layout = emptyLayout
             drawText(
                 textLayoutResult = layout,
                 topLeft = Offset(
@@ -127,7 +153,7 @@ fun LatencyChart(
             return@Canvas
         }
 
-        val dash = PathEffect.dashPathEffect(floatArrayOf(6f, 8f), 0f)
+        val dash = dashEffect
 
         if (showGrid) {
             for (i in 0..GRID_DIVISIONS) {
@@ -140,10 +166,7 @@ fun LatencyChart(
                     strokeWidth = 1f,
                     pathEffect = if (i == 0) null else dash,
                 )
-                val layout = measurer.measure(
-                    text = Formatters.axisLatency(animatedMax * fraction),
-                    style = labelStyle,
-                )
+                val layout = axisLabels[i]
                 drawText(
                     textLayoutResult = layout,
                     topLeft = Offset(
@@ -698,3 +721,6 @@ private fun niceCeiling(value: Double): Double {
 
 /** Shared helper so screens can colour a value the same way the charts do. */
 fun DrawScope.dpToPxCompat(dp: Dp): Float = dp.toPx()
+
+/** Rounds a latency to one decimal for compact chart tooltips. */
+fun roundLatency(value: Double): Double = (value * 10.0).roundToInt() / 10.0
