@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup and device transfer rules for Android 12 and above, referenced by
+    android:dataExtractionRules.
+
+    Same payload as backup_rules.xml: the Room database and the preference files. Cache exports
+    are left out implicitly, because the cache directory is never part of a backup or transfer.
+-->
 <data-extraction-rules>
     <cloud-backup>
         <include domain="database" path="pinglab.db" />
         <include domain="sharedpref" path="." />
-        <exclude domain="file" path="exports" />
     </cloud-backup>
     <device-transfer>
         <include domain="database" path="pinglab.db" />

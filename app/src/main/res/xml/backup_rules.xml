@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup rules for Android 11 and below, referenced by android:fullBackupContent.
+
+    Only the monitored hosts, their samples and the settings are worth restoring. Exported CSV
+    and JSON files live in the cache directory (see file_paths.xml) and the cache is never part
+    of a backup, so listing them here would point at a path outside every included domain,
+    which lint reports as FullBackupContent.
+-->
 <full-backup-content>
     <include domain="database" path="pinglab.db" />
     <include domain="sharedpref" path="." />
-    <exclude domain="file" path="exports" />
 </full-backup-content>
