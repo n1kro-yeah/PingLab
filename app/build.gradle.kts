@@ -30,6 +30,13 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
+            // Signed with the debug key on purpose: CI can then publish an installable,
+            // non-debuggable APK without storing any secrets. A debuggable build runs every
+            // method through the interpreter and skips the baseline profile, which is what makes
+            // a Compose app feel locked to ~24 fps even on a 120 Hz panel. Swap this for a real
+            // upload key before publishing to Play.
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -90,6 +97,8 @@ dependencies {
     // AndroidX foundation
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
+    // Installs app/src/main/baseline-prof.txt on first launch so hot UI code is AOT compiled.
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
