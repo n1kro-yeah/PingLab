@@ -19,6 +19,7 @@ import live.nikro.pinglab.core.model.HostSnapshot
 import live.nikro.pinglab.core.model.HostState
 import live.nikro.pinglab.core.model.LatencyStats
 import live.nikro.pinglab.core.model.MonitoredHost
+import live.nikro.pinglab.core.model.NetworkDetail
 import live.nikro.pinglab.core.model.NetworkStatus
 import live.nikro.pinglab.data.prefs.AppSettings
 import live.nikro.pinglab.di.ServiceLocator
@@ -40,6 +41,7 @@ data class DashboardUiState(
     val cards: List<HostCardState> = emptyList(),
     val monitoring: Boolean = false,
     val network: NetworkStatus = NetworkStatus.OFFLINE,
+    val networkDetail: NetworkDetail = NetworkDetail.NONE,
     val settings: AppSettings = AppSettings(),
     val storedSamples: Int = 0,
     val loading: Boolean = true,
@@ -75,6 +77,12 @@ class DashboardViewModel : ViewModel() {
 
         networkInspector.observe()
             .onEach { status -> _state.update { it.copy(network = status) } }
+            .launchIn(viewModelScope)
+
+        // Which radio is doing the work: LTE/5G technology, operator and bars on mobile data,
+        // band and link speed on Wi-Fi. Separate stream because it also listens to telephony.
+        networkInspector.observeDetail()
+            .onEach { detail -> _state.update { it.copy(networkDetail = detail) } }
             .launchIn(viewModelScope)
 
         PingMonitorService.isRunning

@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Router
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,7 +42,6 @@ import live.nikro.pinglab.R
 import live.nikro.pinglab.core.model.HostState
 import live.nikro.pinglab.core.util.Formatters
 import live.nikro.pinglab.ui.components.EmptyState
-import live.nikro.pinglab.ui.components.MonoTag
 import live.nikro.pinglab.ui.components.SectionCard
 import live.nikro.pinglab.ui.components.Sparkline
 import live.nikro.pinglab.ui.components.StatTile
@@ -93,34 +91,9 @@ fun DashboardScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item(key = "network") {
-                SectionCard(
-                    title = state.network.transportLabel,
-                    subtitle = if (state.network.isConnected) "Connected" else "No connection",
-                    trailing = {
-                        Icon(
-                            imageVector = if (state.network.isConnected) Icons.Rounded.Router else Icons.Rounded.CloudOff,
-                            contentDescription = null,
-                            tint = if (state.network.isConnected) palette.up else palette.down,
-                        )
-                    },
-                ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        state.network.localAddress?.let { MonoTag(text = "ip " + it) }
-                        state.network.gateway?.let { MonoTag(text = "gw " + it) }
-                        if (state.network.isVpn) MonoTag(text = "VPN")
-                        if (state.network.isMetered) MonoTag(text = "metered")
-                    }
-                    if (state.network.dnsServers.isNotEmpty()) {
-                        VSpace(6)
-                        Text(
-                            text = "DNS: " + state.network.dnsServers.joinToString(", "),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                }
+                // Wi-Fi, LTE/5G, Ethernet and VPN all render from the same card; the body
+                // switches to whatever the active transport can actually tell us.
+                NetworkCard(status = state.network, detail = state.networkDetail)
             }
 
             item(key = "monitoring") {
