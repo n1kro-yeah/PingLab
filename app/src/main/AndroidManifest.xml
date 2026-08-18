@@ -79,6 +79,22 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!--
+            Quick Settings tile. exported must stay true because SystemUI binds it from another
+            process; BIND_QUICK_SETTINGS_TILE is a system signature permission, so only SystemUI
+            can actually reach it.
+        -->
+        <service
+            android:name=".service.MonitorTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_notification"
+            android:label="@string/tile_monitor_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".service.MonitorActionReceiver"
             android:exported="false" />

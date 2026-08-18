@@ -5,7 +5,7 @@
     <string name="nav_dashboard">Обзор</string>
     <string name="nav_live">Пинг</string>
     <string name="nav_hosts">Хосты</string>
-    <string name="nav_tools">Инструменты</string>
+    <string name="nav_tools">Утилиты</string>
     <string name="nav_settings">Настройки</string>
 
     <string name="action_start">Старт</string>
@@ -93,4 +93,46 @@
     <string name="theme_icons_title">Значки</string>
     <string name="theme_icons_subtitle">Стили Material Symbols</string>
     <string name="theme_icons_hint">В навигации неактивные значки контурные, а выбранный — залитый</string>
+    <!-- Dashboard cards -->
+    <string name="dash_monitoring_title">Фоновый мониторинг</string>
+    <string name="dash_monitoring_on">Работает как foreground-сервис</string>
+    <string name="dash_monitoring_off">Выключен — хосты проверяются только при открытом приложении</string>
+    <string name="dash_stat_hosts">Хосты</string>
+    <string name="dash_stat_up">Онлайн</string>
+    <string name="dash_stat_degraded">Просадки</string>
+    <string name="dash_stat_down">Упали</string>
+    <string name="dash_samples_stored">Сохранено измерений: %1$s</string>
+    <string name="dash_empty_title">Хостов пока нет</string>
+    <string name="dash_empty_body">Добавьте сервер, роутер или публичный DNS, чтобы следить за ним круглосуточно.</string>
+    <string name="stat_checked">Проверен</string>
+
+    <!-- Network card -->
+    <string name="net_mobile">Мобильный интернет</string>
+    <string name="net_mobile_no_route">Мобильный интернет, нет маршрута</string>
+    <string name="net_wlan">Wi-Fi</string>
+    <string name="net_wlan_no_route">Wi-Fi, нет маршрута</string>
+    <string name="net_roaming">роуминг</string>
+    <string name="net_link_speed">%1$d Мбит/с канал</string>
+    <string name="net_connected">Подключено</string>
+    <string name="net_offline">Нет подключения</string>
+    <string name="net_radio_hidden">На этой версии Android точный тип радио скрыт от приложений, поэтому показан только мобильный транспорт.</string>
+
+    <!-- Availability report -->
+    <string name="uptime_title">Доступность</string>
+    <string name="uptime_window">24 ч</string>
+    <string name="uptime_subtitle">За %1$s · хостов: %2$d</string>
+    <string name="uptime_empty">За это окно измерений пока нет. Включите мониторинг — отчёт заполнится сам.</string>
+    <string name="uptime_stat_outages">Инциденты</string>
+    <string name="uptime_stat_downtime">Простой</string>
+    <string name="uptime_stat_longest">Максимум</string>
+    <string name="uptime_stat_mttr">MTTR</string>
+    <string name="uptime_down_now">%1$s недоступен уже %2$s</string>
+    <string name="uptime_perfect">Инцидентов не было</string>
+    <string name="uptime_worst">Хуже всех: %1$s · %2$s</string>
+    <string name="uptime_probe_success">Ответили %1$s из %2$s проб</string>
+
+    <!-- Quick Settings tile -->
+    <string name="tile_monitor_label">Мониторинг PingLab</string>
+    <string name="tile_monitor_on">Работает</string>
+    <string name="tile_monitor_off">Выключен</string>
 </resources>

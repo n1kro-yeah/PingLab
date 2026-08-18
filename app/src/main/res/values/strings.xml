@@ -100,4 +100,46 @@
     <string name="theme_icons_title">Icons</string>
     <string name="theme_icons_subtitle">Material Symbols styles</string>
     <string name="theme_icons_hint">Navigation shows outlined icons when inactive and filled ones when selected</string>
+    <!-- Dashboard cards -->
+    <string name="dash_monitoring_title">Background monitoring</string>
+    <string name="dash_monitoring_on">Running as a foreground service</string>
+    <string name="dash_monitoring_off">Off — hosts are only checked while the app is open</string>
+    <string name="dash_stat_hosts">Hosts</string>
+    <string name="dash_stat_up">Up</string>
+    <string name="dash_stat_degraded">Degraded</string>
+    <string name="dash_stat_down">Down</string>
+    <string name="dash_samples_stored">%1$s samples stored</string>
+    <string name="dash_empty_title">No hosts yet</string>
+    <string name="dash_empty_body">Add a server, router or public DNS resolver to watch it around the clock.</string>
+    <string name="stat_checked">Checked</string>
+
+    <!-- Network card -->
+    <string name="net_mobile">Mobile data</string>
+    <string name="net_mobile_no_route">Mobile data, no route</string>
+    <string name="net_wlan">Wireless LAN</string>
+    <string name="net_wlan_no_route">Wireless LAN, no route</string>
+    <string name="net_roaming">roaming</string>
+    <string name="net_link_speed">%1$d Mbps link</string>
+    <string name="net_connected">Connected</string>
+    <string name="net_offline">No connection</string>
+    <string name="net_radio_hidden">Android hides the exact radio type from apps on this version, so only the mobile transport is shown.</string>
+
+    <!-- Availability report -->
+    <string name="uptime_title">Availability</string>
+    <string name="uptime_window">24 h</string>
+    <string name="uptime_subtitle">Last %1$s · %2$d hosts</string>
+    <string name="uptime_empty">No samples in this window yet. Turn monitoring on and this report fills itself in.</string>
+    <string name="uptime_stat_outages">Outages</string>
+    <string name="uptime_stat_downtime">Downtime</string>
+    <string name="uptime_stat_longest">Longest</string>
+    <string name="uptime_stat_mttr">MTTR</string>
+    <string name="uptime_down_now">%1$s is down, %2$s so far</string>
+    <string name="uptime_perfect">No outages in this window</string>
+    <string name="uptime_worst">Worst: %1$s · %2$s</string>
+    <string name="uptime_probe_success">%1$s of %2$s probes answered</string>
+
+    <!-- Quick Settings tile -->
+    <string name="tile_monitor_label">PingLab monitor</string>
+    <string name="tile_monitor_on">Running</string>
+    <string name="tile_monitor_off">Off</string>
 </resources>
