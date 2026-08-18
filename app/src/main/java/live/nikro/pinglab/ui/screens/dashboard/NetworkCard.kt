@@ -17,14 +17,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import live.nikro.pinglab.R
 import live.nikro.pinglab.core.model.NetworkDetail
 import live.nikro.pinglab.core.model.NetworkStatus
 import live.nikro.pinglab.core.model.TransportKind
@@ -58,19 +59,29 @@ fun NetworkCard(
 
     val subtitle = when {
         cellular != null -> buildList {
-            add(if (status.isConnected) "Mobile data" else "Mobile data, no route")
+            add(
+                stringResource(
+                    if (status.isConnected) R.string.net_mobile else R.string.net_mobile_no_route,
+                ),
+            )
             cellular.carrier?.let { add(it) }
-            if (cellular.roaming) add("roaming")
-        }.joinToString(" \u00b7 ")
+            if (cellular.roaming) add(stringResource(R.string.net_roaming))
+        }.joinToString(" \\u00b7 ")
 
         wifi != null -> buildList {
-            add(if (status.isConnected) "Wireless LAN" else "Wireless LAN, no route")
+            add(
+                stringResource(
+                    if (status.isConnected) R.string.net_wlan else R.string.net_wlan_no_route,
+                ),
+            )
             wifi.bandLabel?.let { add(it) }
-            if (wifi.linkSpeedMbps > 0) add(wifi.linkSpeedMbps.toString() + " Mbps link")
-        }.joinToString(" \u00b7 ")
+            if (wifi.linkSpeedMbps > 0) {
+                add(stringResource(R.string.net_link_speed, wifi.linkSpeedMbps))
+            }
+        }.joinToString(" \\u00b7 ")
 
-        status.isConnected -> "Connected"
-        else -> "No connection"
+        status.isConnected -> stringResource(R.string.net_connected)
+        else -> stringResource(R.string.net_offline)
     }
 
     val icon = when (detail.kind) {
@@ -88,17 +99,16 @@ fun NetworkCard(
         title = title,
         subtitle = subtitle,
         trailing = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                if (detail.signalLevel >= 0) {
-                    SignalBars(
-                        level = detail.signalLevel,
-                        activeColor = if (status.isConnected) palette.up else palette.degraded,
-                        inactiveColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
+            // Either the measured meter or the transport glyph, never both. Material's
+            // SignalCellularAlt is itself a bar chart, so drawing it next to our own bars
+            // looked like the card was showing two different signal strengths.
+            if (detail.signalLevel >= 0) {
+                SignalBars(
+                    level = detail.signalLevel,
+                    activeColor = if (status.isConnected) palette.up else palette.degraded,
+                    inactiveColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            } else {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
@@ -108,8 +118,10 @@ fun NetworkCard(
         },
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            status.localAddress?.let { MonoTag(text = "ip " + it) }
-            status.gateway?.let { MonoTag(text = "gw " + it) }
+            status.localAddress?.takeIf { it.isRoutable() }?.let { MonoTag(text = "ip " + it) }
+            // Cellular and VPN links routinely report a wildcard default route. Printing
+            // "gw 0.0.0.0" looks like a bug to the user and tells nobody anything.
+            status.gateway?.takeIf { it.isRoutable() }?.let { MonoTag(text = "gw " + it) }
             if (status.isVpn) MonoTag(text = "VPN")
             if (status.isMetered) MonoTag(text = "metered")
         }
@@ -139,8 +151,7 @@ fun NetworkCard(
         if (cellular != null && cellular.techLabel == null) {
             VSpace(6)
             Text(
-                text = "Android hides the exact radio type from apps on this version, " +
-                    "so only the mobile transport is shown.",
+                text = stringResource(R.string.net_radio_hidden),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -158,6 +169,10 @@ fun NetworkCard(
         }
     }
 }
+
+/** Wildcard and unspecified addresses carry no information and are hidden from the chips. */
+private fun String.isRoutable(): Boolean =
+    isNotBlank() && this != "0.0.0.0" && this != "::" && this != "0:0:0:0:0:0:0:0"
 
 /**
  * Four bars drawn by hand instead of picking one of Android's signal icons, so the level the
