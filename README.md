@@ -32,20 +32,17 @@
 
 ## Скриншоты
 
-Реальные скриншоты сборки 1.1 на Xiaomi 14T: светлая тема, янтарная палитра. Файлы — в `docs/screenshots/`.
+Реальные скриншоты сборки 1.1 на Xiaomi 14T: светлая тема, янтарная палитра. Лента листается вправо — там все семь экранов, тап по картинке открывает её целиком. Файлы лежат в `docs/screenshots/`.
 
 <table>
   <tr>
-    <td align="center" width="25%"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="190"><br><sub><b>Обзор</b><br>сеть, доступность за 24 ч, мониторинг</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/02-dashboard-hosts.jpg" alt="Плитки хостов" width="190"><br><sub><b>Плитки хостов</b><br>спарклайн, средняя, потери, джиттер</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/03-live.jpg" alt="Пинг" width="190"><br><sub><b>Пинг</b><br>живой график RTT и статистика</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/04-hosts.jpg" alt="Хосты" width="190"><br><sub><b>Хосты</b><br>протокол, интервал, таймаут, порядок</sub></td>
-  </tr>
-  <tr>
-    <td align="center" width="25%"><img src="docs/screenshots/05-host-detail.jpg" alt="Карточка хоста" width="190"><br><sub><b>Карточка хоста</b><br>окна 1ч…7д, качество, потери</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/06-tools.jpg" alt="Утилиты" width="190"><br><sub><b>Утилиты</b><br>честный скан портов с доказательствами</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/07-theme.jpg" alt="Тема" width="190"><br><sub><b>Тема</b><br>палитры Material 3, светлая и тёмная</sub></td>
-    <td align="center" width="25%"></td>
+    <td align="center" valign="top"><a href="docs/screenshots/01-dashboard.jpg"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="200"></a><br><sub><b>Обзор</b><br>сеть, доступность за 24 ч, мониторинг</sub></td>
+    <td align="center" valign="top"><a href="docs/screenshots/02-dashboard-hosts.jpg"><img src="docs/screenshots/02-dashboard-hosts.jpg" alt="Плитки хостов" width="200"></a><br><sub><b>Плитки хостов</b><br>спарклайн, средняя, потери, джиттер</sub></td>
+    <td align="center" valign="top"><a href="docs/screenshots/03-live.jpg"><img src="docs/screenshots/03-live.jpg" alt="Пинг" width="200"></a><br><sub><b>Пинг</b><br>живой график RTT и статистика</sub></td>
+    <td align="center" valign="top"><a href="docs/screenshots/04-hosts.jpg"><img src="docs/screenshots/04-hosts.jpg" alt="Хосты" width="200"></a><br><sub><b>Хосты</b><br>протокол, интервал, таймаут, порядок</sub></td>
+    <td align="center" valign="top"><a href="docs/screenshots/05-host-detail.jpg"><img src="docs/screenshots/05-host-detail.jpg" alt="Карточка хоста" width="200"></a><br><sub><b>Карточка хоста</b><br>окна 1ч…7д, качество, потери</sub></td>
+    <td align="center" valign="top"><a href="docs/screenshots/06-tools.jpg"><img src="docs/screenshots/06-tools.jpg" alt="Утилиты" width="200"></a><br><sub><b>Утилиты</b><br>честный скан портов с доказательствами</sub></td>
+    <td align="center" valign="top"><a href="docs/screenshots/07-theme.jpg"><img src="docs/screenshots/07-theme.jpg" alt="Тема" width="200"></a><br><sub><b>Тема</b><br>палитры Material 3, светлая и тёмная</sub></td>
   </tr>
 </table>
 
