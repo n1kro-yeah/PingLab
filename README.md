@@ -32,6 +32,9 @@
 
 ## Скриншоты
 
+<details>
+<summary><b>Показать скриншоты (7)</b> — обзор, хосты, живой пинг, утилиты, тема</summary>
+
 Сборка 1.1 на Xiaomi 14T — светлая тема, янтарная палитра. По порядку: Обзор, плитки хостов, живой пинг, список хостов, карточка хоста, утилиты, тема. Тап по картинке открывает её в полном размере.
 
 <p align="center">
@@ -43,6 +46,8 @@
   <a href="docs/screenshots/06-tools.jpg"><img src="docs/screenshots/06-tools.jpg" alt="Утилиты" width="240"></a>
   <a href="docs/screenshots/07-theme.jpg"><img src="docs/screenshots/07-theme.jpg" alt="Тема" width="240"></a>
 </p>
+
+</details>
 
 ---
 
