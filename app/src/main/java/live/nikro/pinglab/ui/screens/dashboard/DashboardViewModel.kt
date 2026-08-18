@@ -23,7 +23,10 @@ import live.nikro.pinglab.core.model.NetworkDetail
 import live.nikro.pinglab.core.model.NetworkStatus
 import live.nikro.pinglab.data.prefs.AppSettings
 import live.nikro.pinglab.di.ServiceLocator
+import live.nikro.pinglab.domain.stats.HostUptime
 import live.nikro.pinglab.domain.stats.LatencyStatistics
+import live.nikro.pinglab.domain.stats.UptimeAnalyzer
+import live.nikro.pinglab.domain.stats.UptimeDigest
 import live.nikro.pinglab.service.PingMonitorService
 
 /** One row on the dashboard: the configured host plus whatever we know about it right now. */
@@ -44,6 +47,7 @@ data class DashboardUiState(
     val networkDetail: NetworkDetail = NetworkDetail.NONE,
     val settings: AppSettings = AppSettings(),
     val storedSamples: Int = 0,
+    val uptime: UptimeDigest = UptimeDigest(),
     val loading: Boolean = true,
 ) {
     val upCount: Int get() = cards.count { it.state == HostState.UP }
@@ -65,6 +69,8 @@ class DashboardViewModel : ViewModel() {
 
     private val _state = MutableStateFlow(DashboardUiState())
     val state: StateFlow<DashboardUiState> = _state.asStateFlow()
+
+    private var lastUptimeAtMs = 0L
 
     init {
         hostRepository.hosts
@@ -130,6 +136,34 @@ class DashboardViewModel : ViewModel() {
         }
         val stored = runCatching { sampleRepository.totalSamples() }.getOrDefault(0)
         _state.update { it.copy(cards = cards, storedSamples = stored, loading = false) }
+        refreshUptime(hosts)
+    }
+
+    /**
+     * Availability is derived from a full day of samples per host, which is far too much work to
+     * redo on every 15 second tick, so it is recomputed at most once a minute - and immediately
+     * when the user asks for a refresh.
+     */
+    private suspend fun refreshUptime(hosts: List<MonitoredHost>, force: Boolean = false) {
+        val now = System.currentTimeMillis()
+        if (!force && now - lastUptimeAtMs < UPTIME_REFRESH_MS) return
+        lastUptimeAtMs = now
+        val since = now - UPTIME_WINDOW_MS
+        val reports = hosts.map { host ->
+            val samples = runCatching { sampleRepository.since(host.id, host.target, since) }
+                .getOrDefault(emptyList())
+            HostUptime(
+                hostId = host.id,
+                label = host.label,
+                report = UptimeAnalyzer.analyze(
+                    results = samples,
+                    minConsecutiveFailures = MIN_FAILURES_FOR_OUTAGE,
+                ),
+            )
+        }
+        _state.update {
+            it.copy(uptime = UptimeDigest(windowMs = UPTIME_WINDOW_MS, hosts = reports))
+        }
     }
 
     private fun applySnapshots(snapshots: Map<Long, HostSnapshot>) {
@@ -164,11 +198,20 @@ class DashboardViewModel : ViewModel() {
     }
 
     fun refreshNow() {
-        viewModelScope.launch { loadFromDatabase(_state.value.cards.map { it.host }) }
+        viewModelScope.launch {
+            val hosts = _state.value.cards.map { it.host }
+            loadFromDatabase(hosts)
+            refreshUptime(hosts, force = true)
+        }
     }
 
     private companion object {
         const val REFRESH_INTERVAL_MS = 15_000L
         const val SPARKLINE_POINTS = 60
+        const val UPTIME_WINDOW_MS = 24L * 60L * 60L * 1_000L
+        const val UPTIME_REFRESH_MS = 60_000L
+
+        /** One lost probe is noise; two in a row at monitoring cadence is an outage. */
+        const val MIN_FAILURES_FOR_OUTAGE = 2
     }
 }

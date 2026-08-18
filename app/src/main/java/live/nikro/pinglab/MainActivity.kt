@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
 
         requestNotificationPermissionIfNeeded()
         maybeAutoStartMonitoring()
+        maybeStartMonitoringFromTile(intent)
 
         setContent {
             val settings by ServiceLocator.settingsRepository.settings
@@ -67,6 +68,12 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        maybeStartMonitoringFromTile(intent)
     }
 
     private fun keepScreenOn(enabled: Boolean) {
@@ -98,6 +105,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Honours the Quick Settings tile. Starting the service from here is legitimate because the
+     * app is on screen; the tile itself is not allowed to do it on newer Android versions.
+     */
+    private fun maybeStartMonitoringFromTile(intent: Intent?) {
+        if (intent?.getBooleanExtra(EXTRA_START_MONITORING, false) != true) return
+        intent.removeExtra(EXTRA_START_MONITORING)
+        lifecycleScope.launch {
+            if (PingMonitorService.isRunning.value) return@launch
+            if (ServiceLocator.hostRepository.enabled().isEmpty()) return@launch
+            runCatching { PingMonitorService.start(this@MainActivity) }
+        }
+    }
+
     /** Restarts background monitoring after a reboot or cold start when the user asked for it. */
     private fun maybeAutoStartMonitoring() {
         lifecycleScope.launch {
@@ -112,5 +133,11 @@ class MainActivity : ComponentActivity() {
     companion object {
         /** Set by [live.nikro.pinglab.service.NotificationCenter] when a host alert is tapped. */
         const val EXTRA_HOST_ID = "live.nikro.pinglab.extra.OPEN_HOST_ID"
+
+        /**
+         * Set by [live.nikro.pinglab.service.MonitorTileService] when the platform refuses to let
+         * a Quick Settings tile start a foreground service directly.
+         */
+        const val EXTRA_START_MONITORING = "live.nikro.pinglab.extra.START_MONITORING"
     }
 }

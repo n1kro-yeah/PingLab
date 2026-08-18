@@ -96,13 +96,18 @@ fun DashboardScreen(
                 NetworkCard(status = state.network, detail = state.networkDetail)
             }
 
+            item(key = "uptime") {
+                // Availability over the last day, recomputed from the samples already on disk.
+                UptimeCard(digest = state.uptime)
+            }
+
             item(key = "monitoring") {
                 SectionCard(
-                    title = "Background monitoring",
+                    title = stringResource(R.string.dash_monitoring_title),
                     subtitle = if (state.monitoring) {
-                        "Running as a foreground service"
+                        stringResource(R.string.dash_monitoring_on)
                     } else {
-                        "Off - hosts are only checked when the app is open"
+                        stringResource(R.string.dash_monitoring_off)
                     },
                     trailing = {
                         Switch(
@@ -116,24 +121,24 @@ fun DashboardScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         StatTile(
-                            label = "Hosts",
+                            label = stringResource(R.string.dash_stat_hosts),
                             value = state.cards.size.toString(),
                             modifier = Modifier.weight(1f),
                         )
                         StatTile(
-                            label = "Up",
+                            label = stringResource(R.string.dash_stat_up),
                             value = state.upCount.toString(),
                             accent = palette.up,
                             modifier = Modifier.weight(1f),
                         )
                         StatTile(
-                            label = "Degraded",
+                            label = stringResource(R.string.dash_stat_degraded),
                             value = state.degradedCount.toString(),
                             accent = palette.degraded,
                             modifier = Modifier.weight(1f),
                         )
                         StatTile(
-                            label = "Down",
+                            label = stringResource(R.string.dash_stat_down),
                             value = state.downCount.toString(),
                             accent = palette.down,
                             modifier = Modifier.weight(1f),
@@ -141,7 +146,10 @@ fun DashboardScreen(
                     }
                     VSpace(4)
                     Text(
-                        text = Formatters.count(state.storedSamples) + " samples stored",
+                        text = stringResource(
+                            R.string.dash_samples_stored,
+                            Formatters.count(state.storedSamples),
+                        ),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -152,8 +160,8 @@ fun DashboardScreen(
                 item(key = "empty") {
                     EmptyState(
                         icon = Icons.Rounded.Router,
-                        title = "No hosts yet",
-                        body = "Add a server, router or public DNS resolver to watch it around the clock.",
+                        title = stringResource(R.string.dash_empty_title),
+                        body = stringResource(R.string.dash_empty_body),
                         actionLabel = stringResource(R.string.action_add_host),
                         onAction = onAddHost,
                     )
@@ -237,7 +245,7 @@ private fun HostCard(
                 modifier = Modifier.weight(1f),
             )
             StatTile(
-                label = "Checked",
+                label = stringResource(R.string.stat_checked),
                 value = if (card.lastCheckMs > 0L) Formatters.relative(card.lastCheckMs) else Formatters.PLACEHOLDER,
                 modifier = Modifier.weight(1.2f),
             )
