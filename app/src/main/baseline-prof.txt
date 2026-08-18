@@ -1,0 +1,23 @@
+# PingLab baseline profile - human-readable ART profile format (HRF).
+#
+# AGP picks this file up automatically for release builds and ships it as
+# assets/dexopt/baseline.prof. androidx.profileinstaller then installs it on first launch, so
+# ART compiles the listed code ahead of time instead of interpreting it and waiting for JIT.
+#
+# Why this matters here: without a profile, a Compose UI spends the first launches interpreting
+# composition, layout and draw code. Frames then take far longer than the 8.3 ms budget of a
+# 120 Hz display, which looks exactly like an artificial frame-rate cap.
+#
+# Flags on each rule:
+#   H = hot (called often), S = startup (needed during launch), P = post-startup.
+#
+# This is a hand-written, whole-package profile. It is deliberately broad because every screen
+# in this app is on a hot path (dashboard, live chart, host list, tools). The stricter long-term
+# option is to generate a profile from real user journeys with the AndroidX Baseline Profile
+# Gradle plugin plus a macrobenchmark module, which also lets Macrobenchmark measure the
+# resulting jank; that needs a connected device or emulator, so it is not wired into CI here.
+#
+# Compose, Activity, Lifecycle, Navigation and Room already ship their own profiles inside their
+# AAR artifacts, so only application code needs listing.
+
+HSPLlive/nikro/pinglab/**->**(**)**

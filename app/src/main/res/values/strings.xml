@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PingLab</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_live">Live ping</string>
+    <string name="nav_hosts">Hosts</string>
+    <string name="nav_tools">Tools</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Common -->
+    <string name="action_start">Start</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_export">Export</string>
+    <string name="action_add_host">Add host</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_copy">Copy</string>
+
+    <!-- Live ping -->
+    <string name="live_target_hint">Host or IP address</string>
+    <string name="live_target_helper">e.g. 8.8.8.8, google.com, 192.168.1.1:443</string>
+    <string name="live_empty_title">Nothing measured yet</string>
+    <string name="live_empty_body">Enter a host and press Start to begin probing.</string>
+
+    <!-- Stats labels -->
+    <string name="stat_last">Last</string>
+    <string name="stat_min">Min</string>
+    <string name="stat_avg">Avg</string>
+    <string name="stat_max">Max</string>
+    <string name="stat_median">Median</string>
+    <string name="stat_jitter">Jitter</string>
+    <string name="stat_loss">Loss</string>
+    <string name="stat_p95">p95</string>
+    <string name="stat_p99">p99</string>
+    <string name="stat_stddev">Std dev</string>
+    <string name="stat_sent">Sent</string>
+    <string name="stat_received">Received</string>
+    <string name="stat_mos">MOS</string>
+    <string name="stat_uptime">Uptime</string>
+
+    <!-- Notification -->
+    <string name="notif_channel_monitor_name">Monitoring</string>
+    <string name="notif_channel_monitor_desc">Ongoing notification shown while hosts are being monitored.</string>
+    <string name="notif_channel_alerts_name">Alerts</string>
+    <string name="notif_channel_alerts_desc">Notifies you when a monitored host goes down or recovers.</string>
+    <string name="notif_monitor_title">Monitoring %1$d host(s)</string>
+    <string name="notif_action_stop">Stop</string>
+
+    <!-- Errors -->
+    <string name="error_invalid_host">Enter a valid hostname, IPv4 or IPv6 address</string>
+    <string name="error_no_network">No network connection</string>
+    <string name="error_unknown_host">Host could not be resolved</string>
+
+    <!-- Settings -->
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_probing">Probing defaults</string>
+    <string name="settings_alerts">Alerts</string>
+    <string name="settings_storage">Storage &amp; data</string>
+    <string name="settings_about">About</string>
+
+    <!-- Theme tab -->
+    <string name="nav_theme">Theme</string>
+    <string name="theme_palette_title">Color palette</string>
+    <string name="theme_palette_subtitle">Material 3 tonal palettes</string>
+    <string name="theme_palette_purple">Purple</string>
+    <string name="theme_palette_purple_caption">Material 3 baseline</string>
+    <string name="theme_palette_blue">Blue</string>
+    <string name="theme_palette_blue_caption">PingLab brand</string>
+    <string name="theme_palette_green">Green</string>
+    <string name="theme_palette_green_caption">Calm and high contrast</string>
+    <string name="theme_palette_amber">Amber</string>
+    <string name="theme_palette_amber_caption">Warm, easy at night</string>
+    <string name="theme_seed">Seed</string>
+    <string name="theme_dynamic_overrides">Dynamic color is on, so the palette below is not applied</string>
+    <string name="theme_mode_title">Appearance</string>
+    <string name="theme_mode_system">System</string>
+    <string name="theme_mode_light">Light</string>
+    <string name="theme_mode_dark">Dark</string>
+    <string name="theme_dynamic_title">Dynamic color</string>
+    <string name="theme_dynamic_desc">Build the scheme from the wallpaper (Android 12+)</string>
+    <string name="theme_dynamic_unavailable">Requires Android 12 or newer</string>
+    <string name="theme_amoled_title">Pure black (AMOLED)</string>
+    <string name="theme_amoled_desc">True black surfaces in the dark theme</string>
+    <string name="theme_api_level">Android API level</string>
+    <string name="theme_tonal_title">Tonal palette</string>
+    <string name="theme_tonal_subtitle">One hue, sampled from tone 10 to tone 99</string>
+    <string name="theme_roles_title">Color roles</string>
+    <string name="theme_roles_subtitle">How the scheme lands on real surfaces</string>
+    <string name="theme_components_title">Components</string>
+    <string name="theme_loading_title">Loading animations</string>
+    <string name="theme_loading_subtitle">Wavy indicators in the Material 3 Expressive style</string>
+    <string name="theme_loading_determinate">With progress</string>
+    <string name="theme_loading_indeterminate">Without progress</string>
+    <string name="theme_icons_title">Icons</string>
+    <string name="theme_icons_subtitle">Material Symbols styles</string>
+    <string name="theme_icons_hint">Navigation shows outlined icons when inactive and filled ones when selected</string>
+    <!-- Dashboard cards -->
+    <string name="dash_monitoring_title">Background monitoring</string>
+    <string name="dash_monitoring_on">Running as a foreground service</string>
+    <string name="dash_monitoring_off">Off — hosts are only checked while the app is open</string>
+    <string name="dash_stat_hosts">Hosts</string>
+    <string name="dash_stat_up">Up</string>
+    <string name="dash_stat_degraded">Degraded</string>
+    <string name="dash_stat_down">Down</string>
+    <string name="dash_samples_stored">%1$s samples stored</string>
+    <string name="dash_empty_title">No hosts yet</string>
+    <string name="dash_empty_body">Add a server, router or public DNS resolver to watch it around the clock.</string>
+    <string name="stat_checked">Checked</string>
+
+    <!-- Network card -->
+    <string name="net_mobile">Mobile data</string>
+    <string name="net_mobile_no_route">Mobile data, no route</string>
+    <string name="net_wlan">Wireless LAN</string>
+    <string name="net_wlan_no_route">Wireless LAN, no route</string>
+    <string name="net_roaming">roaming</string>
+    <string name="net_link_speed">%1$d Mbps link</string>
+    <string name="net_connected">Connected</string>
+    <string name="net_offline">No connection</string>
+    <string name="net_radio_hidden">Android hides the exact radio type from apps on this version, so only the mobile transport is shown.</string>
+
+    <!-- Availability report -->
+    <string name="uptime_title">Availability</string>
+    <string name="uptime_window">24 h</string>
+    <string name="uptime_subtitle">Last %1$s · %2$d hosts</string>
+    <string name="uptime_empty">No samples in this window yet. Turn monitoring on and this report fills itself in.</string>
+    <string name="uptime_stat_outages">Outages</string>
+    <string name="uptime_stat_downtime">Downtime</string>
+    <string name="uptime_stat_longest">Longest</string>
+    <string name="uptime_stat_mttr">MTTR</string>
+    <string name="uptime_down_now">%1$s is down, %2$s so far</string>
+    <string name="uptime_perfect">No outages in this window</string>
+    <string name="uptime_worst">Worst: %1$s · %2$s</string>
+    <string name="uptime_probe_success">%1$s of %2$s probes answered</string>
+
+    <!-- Quick Settings tile -->
+    <string name="tile_monitor_label">PingLab monitor</string>
+    <string name="tile_monitor_on">Running</string>
+    <string name="tile_monitor_off">Off</string>
+</resources>
