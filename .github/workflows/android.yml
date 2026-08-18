@@ -3,8 +3,11 @@ name: Android CI
 on:
   push:
     branches: [ "main", "feature/**" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
+  release:
+    types: [ published ]
   workflow_dispatch:
 
 concurrency:
@@ -87,3 +90,61 @@ jobs:
           path: app/build/reports/lint-results-debug.html
           if-no-files-found: ignore
           retention-days: 14
+
+  # Runs only for tags like v1.1 and for releases published from the GitHub UI.
+  # It reuses the APKs built above instead of compiling them a second time.
+  release:
+    name: Attach APKs to the release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download debug APK
+        uses: actions/download-artifact@v4
+        with:
+          name: pinglab-debug-apk
+          path: artifacts/debug
+
+      - name: Download release APK
+        uses: actions/download-artifact@v4
+        with:
+          name: pinglab-release-apk
+          path: artifacts/release
+
+      # Tag v1.1 gives pinglab-1.1-release.apk and pinglab-1.1-debug.apk,
+      # which are exactly the names the README promises.
+      - name: Name the assets after the tag
+        id: assets
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          mkdir -p dist
+          cp "$(ls artifacts/release/*.apk | head -n 1)" "dist/pinglab-${VERSION}-release.apk"
+          cp "$(ls artifacts/debug/*.apk | head -n 1)" "dist/pinglab-${VERSION}-debug.apk"
+          ls -lh dist
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      # A pushed tag has no release yet; a release published from the UI already does.
+      - name: Create the release if it is missing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.assets.outputs.tag }}"
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" \
+              --title "PingLab ${{ steps.assets.outputs.version }}" \
+              --generate-notes
+          fi
+
+      - name: Upload both APKs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ steps.assets.outputs.tag }}" dist/*.apk --clobber

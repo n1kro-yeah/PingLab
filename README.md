@@ -32,17 +32,17 @@
 
 ## Скриншоты
 
-Реальные скриншоты сборки 1.1 на Xiaomi 14T: светлая тема, янтарная палитра. Лента листается вправо — там все семь экранов, тап по картинке открывает её целиком. Файлы лежат в `docs/screenshots/`.
+Сборка 1.1 на Xiaomi 14T — светлая тема, янтарная палитра. По порядку: Обзор, плитки хостов, живой пинг, список хостов, карточка хоста, утилиты, тема. Лента листается вправо, тап по картинке открывает её целиком.
 
 <table>
   <tr>
-    <td align="center" valign="top"><a href="docs/screenshots/01-dashboard.jpg"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="200"></a><br><sub><b>Обзор</b><br>сеть, доступность за 24 ч, мониторинг</sub></td>
-    <td align="center" valign="top"><a href="docs/screenshots/02-dashboard-hosts.jpg"><img src="docs/screenshots/02-dashboard-hosts.jpg" alt="Плитки хостов" width="200"></a><br><sub><b>Плитки хостов</b><br>спарклайн, средняя, потери, джиттер</sub></td>
-    <td align="center" valign="top"><a href="docs/screenshots/03-live.jpg"><img src="docs/screenshots/03-live.jpg" alt="Пинг" width="200"></a><br><sub><b>Пинг</b><br>живой график RTT и статистика</sub></td>
-    <td align="center" valign="top"><a href="docs/screenshots/04-hosts.jpg"><img src="docs/screenshots/04-hosts.jpg" alt="Хосты" width="200"></a><br><sub><b>Хосты</b><br>протокол, интервал, таймаут, порядок</sub></td>
-    <td align="center" valign="top"><a href="docs/screenshots/05-host-detail.jpg"><img src="docs/screenshots/05-host-detail.jpg" alt="Карточка хоста" width="200"></a><br><sub><b>Карточка хоста</b><br>окна 1ч…7д, качество, потери</sub></td>
-    <td align="center" valign="top"><a href="docs/screenshots/06-tools.jpg"><img src="docs/screenshots/06-tools.jpg" alt="Утилиты" width="200"></a><br><sub><b>Утилиты</b><br>честный скан портов с доказательствами</sub></td>
-    <td align="center" valign="top"><a href="docs/screenshots/07-theme.jpg"><img src="docs/screenshots/07-theme.jpg" alt="Тема" width="200"></a><br><sub><b>Тема</b><br>палитры Material 3, светлая и тёмная</sub></td>
+    <td><a href="docs/screenshots/01-dashboard.jpg"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="200"></a></td>
+    <td><a href="docs/screenshots/02-dashboard-hosts.jpg"><img src="docs/screenshots/02-dashboard-hosts.jpg" alt="Плитки хостов" width="200"></a></td>
+    <td><a href="docs/screenshots/03-live.jpg"><img src="docs/screenshots/03-live.jpg" alt="Пинг" width="200"></a></td>
+    <td><a href="docs/screenshots/04-hosts.jpg"><img src="docs/screenshots/04-hosts.jpg" alt="Хосты" width="200"></a></td>
+    <td><a href="docs/screenshots/05-host-detail.jpg"><img src="docs/screenshots/05-host-detail.jpg" alt="Карточка хоста" width="200"></a></td>
+    <td><a href="docs/screenshots/06-tools.jpg"><img src="docs/screenshots/06-tools.jpg" alt="Утилиты" width="200"></a></td>
+    <td><a href="docs/screenshots/07-theme.jpg"><img src="docs/screenshots/07-theme.jpg" alt="Тема" width="200"></a></td>
   </tr>
 </table>
 
@@ -223,6 +223,8 @@ app/src/main/java/live/nikro/pinglab/
 ```
 
 CI (`.github/workflows/android.yml`) прогоняет тесты и обе сборки на каждый push; APK доступны как артефакты прогона.
+
+Пуш тега вида `v1.1` — или публикация релиза через интерфейс GitHub — запускает ту же сборку и по её окончании сам прикрепляет к релизу `pinglab-1.1-release.apk` и `pinglab-1.1-debug.apk`. Вручную загружать ничего не нужно.
 
 > Перед публикацией в Play нужно завести настоящий upload-ключ: сейчас release подписывается отладочным.
 
