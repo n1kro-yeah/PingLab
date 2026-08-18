@@ -1,141 +1,210 @@
-# PingLab
+<h1 align="center">PingLab</h1>
 
-A real, offline-capable network measurement app for Android, written in Kotlin with
-Jetpack Compose and **Material 3 (Material You)**. PingLab pings IP addresses and servers,
-charts the latency in real time, keeps a history in a local database, and scores the
-connection quality with an E-model based MOS estimate.
+<p align="center">
+  Мониторинг доступности хостов на Android: ICMP/TCP/HTTP/DNS-пробы, живые графики задержки,
+  фоновая слежка с уведомлениями и набор сетевых инструментов. Полностью на Kotlin и Jetpack Compose,
+  дизайн — Material 3.
+</p>
 
-> Package: `live.nikro.pinglab` - minSdk 26, targetSdk/compileSdk 35, Kotlin 2.0, AGP 8.7.
+<p align="center">
+  <img alt="Android 8.0+" src="https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white">
+  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-2.0.21-7F52FF?logo=kotlin&logoColor=white">
+  <img alt="Jetpack Compose" src="https://img.shields.io/badge/Compose%20BOM-2024.12.01-4285F4?logo=jetpackcompose&logoColor=white">
+  <img alt="Material 3" src="https://img.shields.io/badge/Material%203-1.3.1-6750A4?logo=materialdesign&logoColor=white">
+  <img alt="Java 17" src="https://img.shields.io/badge/JDK-17-ED8B00?logo=openjdk&logoColor=white">
+</p>
 
----
-
-## Features
-
-### Live ping
-- Continuous probing with a selectable interval (0.25 s to 5 s) and payload size.
-- Five probe protocols: **ICMP**, **TCP connect**, **HTTP**, **HTTPS** and **DNS**.
-- Real-time latency chart (line / area / bars), console-style packet log, and nine live
-  statistics: last, min, avg, max, median, jitter, loss, p95, MOS.
-- Automatic session persistence: a finished run is stored as a session summary.
-- Export the run to **CSV** or **JSON** and share it through the Android share sheet.
-
-### Background monitoring
-- Add any number of monitored hosts, each with its own interval, timeout, payload,
-  failure threshold and "degraded" latency limit.
-- A foreground service (`specialUse` FGS type) keeps the checks running with a live
-  notification that shows the current up/down summary and a stop action.
-- Down / recovered / degraded alerts through a dedicated notification channel.
-
-### History and analysis
-- Every sample is written to Room with retention rules (days + max rows per host).
-- Per-host detail screen with 1 h / 6 h / 24 h / 7 d windows, latency chart, jitter chart,
-  latency histogram, packet-loss donut, quality gauge and a full statistics grid.
-- Trend detection (improving / stable / degrading) over the selected window.
-
-### Diagnostics tools
-- **Traceroute** built on TTL-limited probes with per-hop RTT bars and export.
-- **DNS lookup**: A/AAAA records, CNAME, reverse PTR and resolution timing.
-- **TCP port scanner** with a common-ports preset, a 1-1024 sweep or a custom range,
-  live progress, service names and banner grabbing.
-
-### Quality scoring
-- RFC 3550 jitter, standard deviation, percentiles (p90/p95/p99).
-- ITU-T E-model R-factor to MOS conversion, plus per-use-case ratings for gaming,
-  voice, video, streaming and browsing.
+<p align="center">
+  <a href="https://github.com/n1kro-yeah/PingLab/actions/workflows/android.yml">
+    <img alt="CI" src="https://github.com/n1kro-yeah/PingLab/actions/workflows/android.yml/badge.svg?branch=feature/ping-monitor">
+  </a>
+</p>
 
 ---
 
-## Material 3 design
+## Скриншоты
 
-The whole UI is Material 3, not Material 2 with new colors:
+Картинки лежат в `docs/screenshots/`. Достаточно закинуть туда файлы с такими именами — таблица подхватит их сама.
 
-| Area | Implementation |
+<table>
+  <tr>
+    <td align="center" width="25%"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="200"><br><sub><b>Обзор</b><br>сеть, доступность, хосты</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/02-live.jpg" alt="Живой пинг" width="200"><br><sub><b>Пинг</b><br>график и лог в реальном времени</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/03-tools.jpg" alt="Утилиты" width="200"><br><sub><b>Утилиты</b><br>trace, DNS, порты, TLS, WOL</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/04-theme.jpg" alt="Тема" width="200"><br><sub><b>Тема</b><br>палитры Material 3</sub></td>
+  </tr>
+</table>
+
+---
+
+## Что умеет
+
+| Экран | Возможности |
 | --- | --- |
-| Color | Full M3 color-role set (primary / secondary / tertiary containers, surface variants, `surfaceContainer`, `outlineVariant`) for light and dark |
-| Dynamic color | `dynamicLightColorScheme` / `dynamicDarkColorScheme` on Android 12+, toggleable in settings |
-| Navigation | `NavigationBar` with five destinations, `Scaffold`, `TopAppBar` / `LargeTopAppBar` with `exitUntilCollapsedScrollBehavior` |
-| Selection | `SingleChoiceSegmentedButtonRow`, `FilterChip`, `AssistChip`, `PrimaryTabRow` |
-| Surfaces | Tonal elevation via `surfaceContainer` roles instead of drop shadows |
-| Input | `OutlinedTextField` with supporting text and error state, `Slider`, `Switch`, `ModalBottomSheet` |
-| Type / shape | M3 type scale (`displaySmall` to `labelSmall`) and the M3 shape scale |
-| System UI | Edge-to-edge with `enableEdgeToEdge()`, dynamic status-bar icon contrast |
+| **Обзор** | Карточка активной сети: Wi-Fi (диапазон, скорость линка, RSSI) и мобильный интернет (LTE / LTE+ / LTE Pro / 5G, оператор, шкала сигнала, dBm, роуминг). Карточка доступности за 24 часа: аптайм, число инцидентов, суммарный простой, самый долгий простой, MTTR. Переключатель фонового мониторинга и плитки со статусами хостов. |
+| **Пинг** | Живая сессия: график задержки, скользящее среднее, консольный лог как у `ping`, статистика min/avg/max, джиттер, потери, MOS. |
+| **Хосты** | CRUD хостов: протокол (ICMP/TCP/HTTP/HTTPS/DNS), порт, интервал, таймаут, пороги «просадки», вкл/выкл, сортировка. История и графики по каждому хосту. |
+| **Утилиты** | Traceroute, DNS-резолв, сканер портов с доказательствами (open/closed/filtered), инспектор TLS-сертификата, Wake-on-LAN. |
+| **Тема** | Material 3: фиолетовая палитра по умолчанию, светлая/тёмная/системная, динамические цвета (Android 12+), AMOLED-чёрный, витрина иконок и волнистых индикаторов загрузки. |
+| **Настройки** | Автозапуск мониторинга, звук алертов, хранение истории (ретенция), экспорт CSV/JSON, «не гасить экран». |
 
-Charts are drawn with the Compose `Canvas` API and pull their colors from the same
-Material 3 scheme, so they follow the wallpaper theme and dark mode automatically.
+Ещё:
 
----
-
-## Architecture
-
-```
-ui/            Compose screens, theme, reusable components and Canvas charts
-  navigation/  NavHost + Material 3 NavigationBar
-  screens/     dashboard, live, hosts, detail, tools, settings (screen + ViewModel each)
-  components/  charts, cards, chips, stat tiles, packet log
-  theme/       M3 color roles, typography, shapes, status palette
-domain/        stats, quality scoring, MOS, live session, monitor engine
-data/          Room database, repositories, DataStore settings, CSV/JSON export
-core/          probe engines (ICMP socket, ping binary, TCP, HTTP, DNS), traceroute,
-               port scanner, models, formatters, host validation, network inspector
-service/       foreground monitoring service, notifications, broadcast actions
-di/            ServiceLocator (single, lazy, no reflection)
-```
-
-The ICMP path is tiered and falls back automatically:
-
-1. **ICMP datagram socket** (`SOCK_DGRAM`/`IPPROTO_ICMP`) - unprivileged, exact RTT.
-2. **`/system/bin/ping`** - output parsed with a pure, unit-tested parser.
-3. **`InetAddress.isReachable`** - last resort when the platform blocks both.
-
-See `docs/ARCHITECTURE.md` for the detailed breakdown.
+- **Фоновый сервис** с постоянным уведомлением и кнопкой «стоп», отдельные каналы для тихого мониторинга и громких алертов.
+- **Алерты** о падении, восстановлении и деградации — по одному слоту на хост, без спама при «мигании».
+- **Плитка в шторке** (Quick Settings): включить/выключить мониторинг, не открывая приложение.
+- **Диплинк** вида `pinglab:` + `//host/8.8.8.8` открывает живой пинг сразу по адресу.
 
 ---
 
-## Building
+## Стек
 
-### Android Studio
-1. Open the project folder (Android Studio Ladybug or newer).
-2. Let Gradle sync; the wrapper is generated on first sync if it is missing.
-3. Run the `app` configuration on a device or emulator with API 26+.
+**Ядро**
 
-### Command line
-```bash
-./gradlew assembleDebug      # debug APK -> app/build/outputs/apk/debug/
-./gradlew test               # JVM unit tests
-./gradlew assembleRelease    # minified release build
-```
+| Что | Чем | Версия |
+| --- | --- | --- |
+| Язык | Kotlin | 2.0.21 |
+| Асинхронность | Coroutines + Flow | 1.9.0 |
+| Сериализация | kotlinx.serialization | 1.7.3 |
+| Минимальная/целевая ОС | Android | API 26 / 35 |
+| JVM | Java toolchain | 17 |
 
-If the wrapper is not present yet:
-```bash
-gradle wrapper --gradle-version 8.11.1
-```
+**UI**
 
-### CI
-`.github/workflows/android.yml` runs the unit tests and uploads the debug APK as a
-build artifact (`pinglab-debug-apk`) on every push to `main` and `feature/**`.
+| Что | Чем | Версия |
+| --- | --- | --- |
+| UI-фреймворк | Jetpack Compose (BOM) | 2024.12.01 |
+| Дизайн-система | Material 3 | 1.3.1 |
+| Навигация | Navigation Compose | 2.8.5 |
+| Адаптивность | material3-window-size-class | BOM |
+| Иконки | material-icons-extended | BOM |
+| Сплэш | core-splashscreen | 1.0.1 |
+| Графики | собственные `Canvas`-компоненты | — |
+
+**Данные и фон**
+
+| Что | Чем | Версия |
+| --- | --- | --- |
+| БД | Room (+ KSP) | 2.6.1 |
+| Настройки | DataStore Preferences | 1.1.1 |
+| Отложенные задачи | WorkManager | 2.10.0 |
+| Жизненный цикл | Lifecycle / ViewModel | 2.8.7 |
+| Прогрев кода | ProfileInstaller + Baseline Profile | 1.4.1 |
+| DI | ручной `ServiceLocator` | — |
+
+**Сборка и качество**
+
+| Что | Чем | Версия |
+| --- | --- | --- |
+| Сборка | Android Gradle Plugin | 8.7.3 |
+| Кодогенерация | KSP | 2.0.21-1.0.28 |
+| Тесты | JUnit4 | 4.13.2 |
+| Инструментальные тесты | AndroidX Test + Espresso | 1.2.1 / 3.6.1 |
+| Статический анализ | Android Lint (`checkDependencies = true`) | AGP |
+| CI | GitHub Actions (unit-тесты, debug- и release-APK) | — |
 
 ---
 
-## Permissions
+## Архитектура
 
-| Permission | Why |
+```
+app/src/main/java/live/nikro/pinglab/
+├─ core/
+│  ├─ model/      # ProbeResult, LatencyStats, MonitoredHost, NetworkStatus, NetworkDetails…
+│  ├─ net/        # ICMP-сокет, системный ping, TCP/HTTP/DNS-пробы, traceroute
+│  └─ util/       # Formatters, HostValidator, NetworkInspector
+├─ data/
+│  ├─ db/         # Room: entities, DAO, база
+│  ├─ prefs/      # DataStore-настройки
+│  └─ repo/       # HostRepository, SampleRepository, SettingsRepository
+├─ domain/
+│  ├─ monitor/    # MonitorEngine: расписание проб, состояния хостов, алерты
+│  └─ stats/      # LatencyStatistics, UptimeAnalyzer, качество связи
+├─ service/       # PingMonitorService (FGS), NotificationCenter, ресивер, QS-плитка
+├─ ui/
+│  ├─ components/ # SectionCard, StatTile, графики, индикаторы загрузки
+│  ├─ navigation/ # NavHost + нижняя навигация
+│  ├─ screens/    # dashboard, live, hosts, tools, theme, settings
+│  └─ theme/      # палитры Material 3, тональные схемы, статус-цвета
+└─ di/            # ServiceLocator
+```
+
+Поток данных однонаправленный: `PingEngine → MonitorEngine → Repository (Room) → ViewModel (StateFlow) → Compose`.
+Живые снимки от сервиса перекрывают историю из БД, пока сервис работает.
+
+---
+
+## Метрики
+
+| Метрика | Как считается |
 | --- | --- |
-| `INTERNET` | sending probes |
-| `ACCESS_NETWORK_STATE` | transport type, VPN and metered detection |
-| `POST_NOTIFICATIONS` | monitoring notification and alerts (Android 13+) |
-| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE` | background monitoring |
-| `RECEIVE_BOOT_COMPLETED` | optional auto-start of monitoring |
+| Джиттер | RFC 3550: `J += (|D(i-1,i)| - J) / 16` |
+| Перцентили | p50 / p90 / p95 / p99 по отсортированным RTT |
+| R-фактор | `R = 93.2 - effLatency/40`, где `effLatency = avg/2 + jitter*2 + 10`; штраф `-2.5` за каждый % потерь |
+| MOS | `1 + 0.035R + R(R-60)(100-R)·7.10e-6`, обрезка 1.0…4.41 |
+| Качество | взвешенно: потери 45%, задержка 30%, джиттер 25% |
+| Аптайм | по времени, а не по пакетам: инцидент = ≥2 неудачных пробы подряд, простой = от первой неудачи до восстановления |
+| MTTR | среднее время закрытых инцидентов в окне |
 
-No analytics, no ads, no account. All data stays on the device.
+Проблемы самого телефона (нет сети, отозвано разрешение) в аптайм не засчитываются — иначе метро в час пик выглядело бы как падение сервера.
 
 ---
 
-## Testing
+## Сканер портов
 
-JVM unit tests cover the pure logic:
+Обычный `connect()` врёт: на многих сетях провайдер или роутер отвечает вместо хоста, и «открытыми» кажутся все порты. Поэтому вердикт строится на доказательствах:
 
-- `LatencyStatisticsTest` - aggregates, percentiles, jitter, histogram, trend, merge
-- `QualityEvaluatorTest` - scoring bounds and use-case grading
-- `MosCalculatorTest` - E-model R-factor and MOS behaviour
-- `PingOutputParserTest` - every `ping` output shape and failure classification
-- `HostValidatorTest` - hostnames, IPv4/IPv6 literals, ports, URL forms
+1. Контрольные пробы по заведомо закрытым портам (49200–65500) — если они «открыты», сеть подставляет ответ, и весь скан помечается как ненадёжный.
+2. Для открытого порта ищется подтверждение: баннер, HTTP-ответ, TLS-хендшейк или любые данные.
+3. Отличаются `CLOSED` (RST) и `FILTERED` (тишина/таймаут), фильтрованные перепроверяются.
+
+---
+
+## Разрешения
+
+| Разрешение | Зачем |
+| --- | --- |
+| `INTERNET` | сами пробы |
+| `ACCESS_NETWORK_STATE` | тип транспорта, метрика, VPN, DNS, шлюз |
+| `ACCESS_WIFI_STATE` | диапазон, частота и скорость линка Wi-Fi |
+| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE` | непрерывный мониторинг |
+| `POST_NOTIFICATIONS` | уведомление сервиса и алерты (Android 13+) |
+| `WAKE_LOCK` | пробы не должны засыпать вместе с экраном |
+
+`READ_PHONE_STATE` **не запрашивается**: тип радио и уровень сигнала берутся из `TelephonyCallback` (Android 12+), который разрешений не требует. На Android 11 и старше карточка честно пишет «Мобильный интернет» без уточнения поколения. SSID Wi-Fi не показывается, потому что с Android 10 он требует геолокации.
+
+---
+
+## Сборка
+
+```bash
+./gradlew :app:testDebugUnitTest      # юнит-тесты
+./gradlew :app:assembleDebug          # debug APK
+./gradlew :app:assembleRelease        # release APK (сейчас подписан debug-ключом)
+./gradlew :app:lintRelease            # статический анализ
+```
+
+CI (`.github/workflows/android.yml`) прогоняет тесты и обе сборки на каждый push; APK доступны как артефакты прогона.
+
+> Перед публикацией в Play нужно завести настоящий upload-ключ: сейчас release подписывается отладочным.
+
+---
+
+## Тесты
+
+- `LatencyStatisticsTest` — перцентили, джиттер, MOS, серии неудач.
+- `UptimeAnalyzerTest` — инциденты, простой, MTTR, игнор «наших» сетевых сбоев, агрегация по хостам.
+- `HostValidatorTest` — валидация адресов, портов и путей.
+
+```bash
+./gradlew :app:testDebugUnitTest --tests '*Uptime*'
+```
+
+---
+
+## Дальше
+
+- Обнаружение устройств в LAN (ping-свип + mDNS/NSD).
+- Виджет на рабочий стол с аптаймом.
+- Экспорт отчёта о доступности в CSV.
+- Реальный ключ подписи и релиз в Play.
