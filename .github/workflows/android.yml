@@ -4,8 +4,6 @@ on:
   push:
     branches: [ "main", "feature/**" ]
     tags: [ "v*" ]
-  pull_request:
-    branches: [ "main" ]
   release:
     types: [ published ]
   workflow_dispatch:
@@ -92,7 +90,7 @@ jobs:
           retention-days: 14
 
   # Runs after every green build: plain branch pushes, tags like v1.1 and releases
-  # published from the GitHub UI. Pull requests never publish anything.
+  # published from the GitHub UI. The condition below stays as a safety net.
   release:
     name: Attach APKs to the release
     needs: build
