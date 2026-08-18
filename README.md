@@ -7,6 +7,8 @@
 </p>
 
 <p align="center">
+  <img alt="Версия 1.1" src="https://img.shields.io/badge/version-1.1-6750A4">
+  <img alt="Пакет live.nikro.pinglab" src="https://img.shields.io/badge/package-live.nikro.pinglab-4A4458?logo=android&logoColor=white">
   <img alt="Android 8.0+" src="https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white">
   <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-2.0.21-7F52FF?logo=kotlin&logoColor=white">
   <img alt="Jetpack Compose" src="https://img.shields.io/badge/Compose%20BOM-2024.12.01-4285F4?logo=jetpackcompose&logoColor=white">
@@ -18,22 +20,49 @@
   <a href="https://github.com/n1kro-yeah/PingLab/actions/workflows/android.yml">
     <img alt="CI" src="https://github.com/n1kro-yeah/PingLab/actions/workflows/android.yml/badge.svg?branch=feature/ping-monitor">
   </a>
+  <a href="https://github.com/n1kro-yeah/PingLab/releases/latest">
+    <img alt="Последний релиз" src="https://img.shields.io/github/v/release/n1kro-yeah/PingLab?display_name=tag&label=release&color=6750A4">
+  </a>
+  <a href="https://github.com/n1kro-yeah/PingLab/releases">
+    <img alt="Загрузки" src="https://img.shields.io/github/downloads/n1kro-yeah/PingLab/total?label=downloads&color=3DDC84">
+  </a>
 </p>
 
 ---
 
 ## Скриншоты
 
-Картинки лежат в `docs/screenshots/`. Достаточно закинуть туда файлы с такими именами — таблица подхватит их сама.
+Реальные скриншоты сборки 1.1 на Xiaomi 14T: светлая тема, янтарная палитра. Файлы — в `docs/screenshots/`.
 
 <table>
   <tr>
-    <td align="center" width="25%"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="200"><br><sub><b>Обзор</b><br>сеть, доступность, хосты</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/02-live.jpg" alt="Живой пинг" width="200"><br><sub><b>Пинг</b><br>график и лог в реальном времени</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/03-tools.jpg" alt="Утилиты" width="200"><br><sub><b>Утилиты</b><br>trace, DNS, порты, TLS, WOL</sub></td>
-    <td align="center" width="25%"><img src="docs/screenshots/04-theme.jpg" alt="Тема" width="200"><br><sub><b>Тема</b><br>палитры Material 3</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/01-dashboard.jpg" alt="Обзор" width="190"><br><sub><b>Обзор</b><br>сеть, доступность за 24 ч, мониторинг</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/02-dashboard-hosts.jpg" alt="Плитки хостов" width="190"><br><sub><b>Плитки хостов</b><br>спарклайн, средняя, потери, джиттер</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/03-live.jpg" alt="Пинг" width="190"><br><sub><b>Пинг</b><br>живой график RTT и статистика</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/04-hosts.jpg" alt="Хосты" width="190"><br><sub><b>Хосты</b><br>протокол, интервал, таймаут, порядок</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="25%"><img src="docs/screenshots/05-host-detail.jpg" alt="Карточка хоста" width="190"><br><sub><b>Карточка хоста</b><br>окна 1ч…7д, качество, потери</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/06-tools.jpg" alt="Утилиты" width="190"><br><sub><b>Утилиты</b><br>честный скан портов с доказательствами</sub></td>
+    <td align="center" width="25%"><img src="docs/screenshots/07-theme.jpg" alt="Тема" width="190"><br><sub><b>Тема</b><br>палитры Material 3, светлая и тёмная</sub></td>
+    <td align="center" width="25%"></td>
   </tr>
 </table>
+
+---
+
+## Установка
+
+Готовые сборки — в разделе [Releases](https://github.com/n1kro-yeah/PingLab/releases):
+
+| Файл | Пакет | Для чего |
+| --- | --- | --- |
+| `pinglab-1.1-release.apk` | `live.nikro.pinglab` | обычная установка: minify + shrink, baseline profile, плавные 120 Гц |
+| `pinglab-1.1-debug.apk` | `live.nikro.pinglab.debug` | отладочная сборка, ставится рядом с релизной и не конфликтует с ней |
+
+После установки стоит выдать разрешение на уведомления — без него не будет ни постоянного уведомления сервиса, ни алертов о падении хоста.
+
+> Обе сборки пока подписаны отладочным ключом, поэтому обновление «поверх» из Play в будущем потребует переустановки.
 
 ---
 
@@ -58,6 +87,18 @@
 ---
 
 ## Стек
+
+**Приложение**
+
+| Что | Значение |
+| --- | --- |
+| Пакет (`applicationId`) | `live.nikro.pinglab` |
+| Пакет debug-сборки | `live.nikro.pinglab.debug` |
+| Версия | **1.1** (`versionCode 2`) |
+| Минимальная ОС | Android 8.0, API 26 |
+| Целевая ОС | Android 15, API 35 |
+| Размер release-APK | ~1,6 МБ |
+| Языки интерфейса | русский, английский |
 
 **Ядро**
 
