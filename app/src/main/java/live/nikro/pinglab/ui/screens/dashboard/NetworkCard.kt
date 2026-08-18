@@ -66,7 +66,7 @@ fun NetworkCard(
             )
             cellular.carrier?.let { add(it) }
             if (cellular.roaming) add(stringResource(R.string.net_roaming))
-        }.joinToString(" \\u00b7 ")
+        }.joinToString(" \u00b7 ")
 
         wifi != null -> buildList {
             add(
@@ -78,7 +78,7 @@ fun NetworkCard(
             if (wifi.linkSpeedMbps > 0) {
                 add(stringResource(R.string.net_link_speed, wifi.linkSpeedMbps))
             }
-        }.joinToString(" \\u00b7 ")
+        }.joinToString(" \u00b7 ")
 
         status.isConnected -> stringResource(R.string.net_connected)
         else -> stringResource(R.string.net_offline)

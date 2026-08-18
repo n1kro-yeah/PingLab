@@ -67,7 +67,7 @@ object Routes {
  * is inactive and the filled one once it is selected, which is what makes the active pill
  * read as "you are here" without relying on colour alone.
  *
- * Settings is intentionally not a bar destination \\u2014 the bar is capped at five items, and
+ * Settings is intentionally not a bar destination \u2014 the bar is capped at five items, and
  * settings is reachable from the action in the Theme top bar.
  */
 enum class TopLevelDestination(
